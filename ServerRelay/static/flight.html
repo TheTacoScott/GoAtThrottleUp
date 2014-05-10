@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>KSP LARP - Guidance</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+
+      <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+      <link rel="stylesheet" href="jqwidgets/styles/jqx.arctic.css" type="text/css" />
+      
+      <link rel="stylesheet" href="css/main.css">
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+      
+      <script src="js/jquery-2.1.0.min.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxdata.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxchart.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxgauge.js"></script>
+      
+      
+      <script src="js/bootstrap.min.js"></script>
+	  
+      <script src="js/main.js"></script>
+      
+  </head>
+<body>
+  <div class="container-fluid">
+    <div class="row header-row">
+      <div class="col-md-8"><h1><span class="glyphicon glyphicon-send"></span> Guidance</h1><div id="linksbar"></div></div>	  
+      <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-time"></span> Mission Time</h3>
+        <table class="table table-condensed">
+        <tbody>
+        <tr><td><span class="readout-label">Mission:</span></td><td class="text-right"><span class="mission-time-readout">alt</span></td></tr>
+        <tr><td><span class="readout-label">Universal:</span></td><td class="text-right"><span class="u-time-readout">alt</span></td></tr>
+        </tbody>
+        </table> 
+      </div>
+    </div> <!-- end row -->
+    <div class="row">
+      <div class="col-md-3">
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Altitude:</span></td><td class="text-right"><span class="altitude-readout">alt</span> m</td></tr>
+            <tr><td class="text-left"><span class="readout-label">Apoapsis:</span></td><td class="text-right"><span class="o-apa-readout">alt</span> m @ <span class="o-apa-time-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Periapsis:</span></td><td class="text-right"><span class="o-per-readout">alt</span> m @ <span class="o-per-time-readout">alt</span></td></tr>
+            
+          </tbody>
+        </table> 
+      </div>
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <h3>Heading</h3>
+            <center><div id="gauge-heading"></div></center>
+            <table class="table table-condensed">
+              <tbody>
+                <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="heading-readout">alt</span>&deg;</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-4 text-center">
+            <h3>Pitch</h3>
+            <center><div id="gauge-pitch"></div></center>
+            <table class="table table-condensed">
+              <tbody>
+                <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="pitch-readout">alt</span>&deg;</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-4 text-center">
+            <h3>Roll</h3>
+            <center><div id="gauge-roll"></div></center>
+            <table class="table table-condensed">
+              <tbody>
+                <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="roll-readout">alt</span>&deg;</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- end row -->
+        <div class="row">
+
+             <div class="col-md-6 text-center">
+                <h3>Altitude</h3>
+                <center>
+                  <div class="gauge-overlay-container">
+                    <div class="gauge-overlay" id="gauge-altitude-p"></div>
+                    <div class="gauge-overlay" id="gauge-altitude-g"></div>
+                    <div class="gauge-overlay" id="gauge-altitude-k"></div>
+                    <div class="gauge-overlay" id="gauge-altitude-m"></div>
+                  </div>
+                </center>
+                <table class="table table-condensed">
+                  <tbody>
+                    <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="altitude-readout">alt</span> m</td></tr>
+                    <tr><td class="text-left"><span class="readout-label">Km:</span></td><td class="text-right"><span class="altitude-k-readout">alt</span></td></tr>                    
+                  </tbody>
+                </table>
+              </div>
+
+
+          
+          <div class="col-md-6 text-center">
+            <h3>Throttle</h3>
+            <center><div id="throttle-gauge"></div></center>
+            <table class="table table-condensed">
+              <tbody>
+                <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="throttle-readout">alt</span>%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- end row -->
+      </div>
+
+    </div> <!-- end row -->
+    
+    
+  
+  </div><!-- end container -->
+</body>
+</html>
+        
+        
+      

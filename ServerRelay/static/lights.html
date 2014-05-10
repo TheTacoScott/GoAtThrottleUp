@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>KSP LARP - Lights</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+
+      <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      
+      <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+      <link rel="stylesheet" href="css/main.css">
+      
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+      <link href='http://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+      
+      <script src="js/jquery-2.1.0.min.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxchart.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxgauge.js"></script>
+      <link rel="stylesheet" href="jqwidgets/styles/jqx.darkblue.css" type="text/css" />
+      
+      <script src="js/bootstrap.min.js"></script>
+	  
+      <script src="js/main.js"></script>
+      
+  </head>
+<body>
+  <div class="container-fluid">
+    <div class="row header-row">
+      <div class="col-md-8"><h1><span class="glyphicon glyphicon-info-sign"></span> Lights</h1><div id="linksbar"></div></div>	  
+      <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-time"></span> Mission Time</h3>
+        <table class="table table-condensed">
+        <tbody>
+        <tr><td><span class="readout-label">Mission:</span></td><td class="text-right"><span class="mission-time-readout">alt</span></td></tr>
+        <tr><td><span class="readout-label">Universal:</span></td><td class="text-right"><span class="u-time-readout">alt</span></td></tr>
+        </tbody>
+        </table> 
+      </div>
+    </div> <!-- end row -->
+
+    <div class="row">
+      <div class="col-md-2">
+        <div id="rcs-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Green if RCS is engaged.">RCS<br><span class="glyphicon glyphicon-magnet"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="sas-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Green if SAS is engaged.">SAS<br><span class="glyphicon glyphicon-magnet"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="gears-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Green if Gears are deployed.">Gears<br><span class="glyphicon glyphicon-cog"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="lights-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Green if Lights are engaged.">Lights<br><span class="glyphicon glyphicon-adjust"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="brakes-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Green if Brakes are engaged.">Brakes<br><span class="glyphicon glyphicon-stop"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="signal-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Off if there are no signal issues. Yellow if paused. Red if other issues.">Signal<br><span class="glyphicon glyphicon-signal"></span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <div id="electric-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Electric<br><span class="glyphicon glyphicon-dashboard"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="lf-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Liquid Fuel<br><span class="glyphicon glyphicon-dashboard"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="ox-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Oxidizer<br><span class="glyphicon glyphicon-dashboard"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="srb-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Solid Fuel<br><span class="glyphicon glyphicon-dashboard"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="xenon-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Xenon<br><span class="glyphicon glyphicon-dashboard"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="mono-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Mono Prop<br><span class="glyphicon glyphicon-dashboard"></span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <div id="dataflow-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Blue if data we have is fresh. Off if it's old.">Data Flow<br><span class="glyphicon glyphicon-transfer"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="target-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Blue if a target is set.">Target<br><span class="glyphicon glyphicon-screenshot"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="apa-time-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if time to Apaoapsis is less than 2 minutes. Blue if less than 1 minute.">Apoapsis<br><span class="glyphicon glyphicon-time"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="per-time-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if time to Periapsis is less than 2 minutes. Blue if less than 1 minute.">Periapsis<br><span class="glyphicon glyphicon-time"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="sphere-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Blue if you are about to change your SOI">SOI<br><span class="glyphicon glyphicon-globe"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="orbit-light" class="status-light text-center">Orbit<br><span class="glyphicon glyphicon-repeat"></span></div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-2">
+        <div id="tumble-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Red if you are < 500m from terrain and your surface speed is > 5m/s. Yellow if you are < 500m from terrain and your surface speed is > 2.5m/s.">Tumble<br><span class="glyphicon glyphicon-refresh"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="collision-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Red if you are < 500m from terrain and your downward vertical speed is > 10m/s. Yellow if you are < 500m from terrain and your downward vertical speed is > 5m/s.">Collision<br><span class="glyphicon glyphicon-resize-small"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="descent-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="If your altitude is < 10k: (Red: vertical speed is > 10m/s) (Yellow: vertical speed is > 5m/s)">Descent<br><span class="glyphicon glyphicon-arrow-down"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="surface-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 250m from terrain. Red if < 100m from terrain.">Surface<br><span class="glyphicon glyphicon-exclamation-sign"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="overheat-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Not Implemented Yet">Overheat<br><span class="glyphicon glyphicon-fire"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="gforce-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Not Implemented Yet">G-Force<br><span class="glyphicon glyphicon-thumbs-down"></span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <div id="inc-light" class="status-light text-center">Inclination<br><span class="glyphicon glyphicon-resize-vertical"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="ecc-light" class="status-light text-center">Eccentricity<br><span class="glyphicon glyphicon-resize-horizontal"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="per-light" class="status-light text-center">Periapsis<br><span class="glyphicon glyphicon-chevron-down"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="escape-light" class="status-light text-center">Escape<br><span class="glyphicon glyphicon-send"></span></div>
+      </div>
+    </div> 
+
+    
+    
+  </div><!-- end container -->
+</body>
+</html>
+        
+        
+      

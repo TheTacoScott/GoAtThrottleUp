@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>KSP LARP - Landing</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+      <!-- CSS -->
+      <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+      <link rel="stylesheet" href="jqwidgets/styles/jqx.arctic.css" type="text/css" />
+      <link rel="stylesheet" href="css/leaflet.ksp-src.css" type="text/css" />
+      <link rel="stylesheet" href="css/main.css">
+      
+      <!-- Fonts -->
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+      
+      <!-- JS -->
+      <script src="js/jquery-2.1.0.min.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxdata.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxchart.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxgauge.js"></script>
+      
+      
+      <script src="js/bootstrap.min.js"></script>
+      
+      <!-- KSP Maps -->
+      <script src="js/leaflet.ksp-min.js"></script>
+        
+      <script src="js/main.js"></script>
+  </head>
+<body>
+  <div class="container-fluid">
+    <div class="row header-row">
+      <div class="col-md-8"><h1><span class="glyphicon glyphicon-download"></span> Landing</h1><div id="linksbar"></div></div>	  
+      <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-time"></span> Mission Time</h3>
+        <table class="table table-condensed">
+        <tbody>
+        <tr><td><span class="readout-label">Mission:</span></td><td class="text-right"><span class="mission-time-readout">alt</span></td></tr>
+        <tr><td><span class="readout-label">Universal:</span></td><td class="text-right"><span class="u-time-readout">alt</span></td></tr>
+        </tbody>
+        </table> 
+      </div>
+    </div> <!-- end row -->
+    <div class="row">
+      <div class="col-md-3">
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Altitude:</span></td><td class="text-right"><span class="altitude-readout">alt</span> m</td></tr>
+            <tr><td class="text-left"><span class="readout-label">Distance from Terrain:</span></td><td class="text-right"><span class="height-from-terrain-readout">alt</span> m</td></tr>
+            <tr><td class="text-left"><span class="readout-label">Atmospheric Density:</span></td><td class="text-right"><span class="atmo-density-readout">alt</span> atm</td></tr>
+            <tr><td class="text-left"><span class="readout-label">Latitude:</span></td><td class="text-right"><span class="latitude-readout">alt</span>&deg;</td></tr>
+            <tr><td class="text-left"><span class="readout-label">Longitude:</span></td><td class="text-right"><span class="longitude-readout">alt</span>&deg;</td></tr>
+            
+          </tbody>
+        </table> 
+      </div>
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <h3>Surface Velocity</h3>
+            <center><div id="gauge-surface-velocity"></div></center>
+            <table class="table table-condensed">
+              <tbody>
+                <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="surface-readout">alt</span> m/s</td></tr>
+              </tbody>
+            </table>
+          </div> 
+          <div class="col-md-6 text-center">
+            <h3>Vertical Velocity</h3>
+            <center><div id="gauge-vertical-velocity"></div></center>
+            <table class="table table-condensed">
+              <tbody>
+                <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="vertical-speed-readout">alt</span> m/s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- end row -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-10 text-center">
+        <div id="landing-map"></div>
+      </div>
+    </div><!-- end row -->
+       
+    
+  
+  </div><!-- end container -->
+</body>
+</html>
+        
+        
+      

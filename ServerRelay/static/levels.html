@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>KSP LARP - Levels</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+
+      <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+	  <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+      <link rel="stylesheet" href="css/main.css">
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+      
+      <script src="js/jquery-2.1.0.min.js"></script>
+	  <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxchart.js"></script>
+	  <script type="text/javascript" src="jqwidgets/jqxgauge.js"></script>
+	  <link rel="stylesheet" href="jqwidgets/styles/jqx.darkblue.css" type="text/css" />
+      
+      <script src="js/bootstrap.min.js"></script>
+	  
+      <script src="js/main.js"></script>
+      
+  </head>
+<body>
+  <div class="container-fluid">
+    <div class="row header-row">
+      <div class="col-md-8"><h1><span class="glyphicon glyphicon-dashboard"></span> Levels</h1><div id="linksbar"></div></div>	  
+      <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-time"></span> Mission Time</h3>
+        <table class="table table-condensed">
+        <tbody>
+        <tr><td><span class="readout-label">Mission:</span></td><td class="text-right"><span class="mission-time-readout">alt</span></td></tr>
+        <tr><td><span class="readout-label">Universal:</span></td><td class="text-right"><span class="u-time-readout">alt</span></td></tr>
+        </tbody>
+        </table> 
+      </div>
+    </div> <!-- end row -->
+
+    <div class="row">
+      <div class="col-md-3 text-center">
+        <h3>Liquid Fuel</h3>
+        <center><div id="lf-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current / Max:</span></td><td class="text-right"><span class="lf-readout">alt</span> / <span class="lf-max-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Delta:</span></td><td class="text-right"><span class="lf-delta-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Percent Left:</span></td><td class="text-right"><span class="lf-percent-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3 text-center">
+        <h3>Oxidizer</h3>
+        <center><div id="ox-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current / Max:</span></td><td class="text-right"><span class="ox-readout">alt</span> / <span class="ox-max-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Delta:</span></td><td class="text-right"><span class="ox-delta-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Percent Left:</span></td><td class="text-right"><span class="ox-percent-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3 text-center">
+        <h3>Electric Charge</h3>
+        <center><div id="elec-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current / Max:</span></td><td class="text-right"><span class="elec-readout">alt</span> / <span class="elec-max-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Delta:</span></td><td class="text-right"><span class="elec-delta-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Percent Left:</span></td><td class="text-right"><span class="elec-percent-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3 text-center">
+        <h3>Mono Prop</h3>
+        <center><div id="mono-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current / Max:</span></td><td class="text-right"><span class="mono-readout">alt</span> / <span class="mono-max-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Delta:</span></td><td class="text-right"><span class="mono-delta-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Percent Left:</span></td><td class="text-right"><span class="mono-percent-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- end row -->
+    <div class="row">
+      <div class="col-md-3 text-center">
+        <h3>Atmospheric Density</h3>
+        <center><div id="gauge-atmo"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="atmo-density-readout">alt</span> atm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+        <div class="col-md-3 text-center">
+        <h3>Xenon Gas</h3>
+        <center><div id="xenon-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current / Max:</span></td><td class="text-right"><span class="xenon-readout">alt</span> / <span class="xenon-max-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Delta:</span></td><td class="text-right"><span class="xenon-delta-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Percent Left:</span></td><td class="text-right"><span class="xenon-percent-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div>
+           <div class="col-md-3 text-center">
+        <h3>Solid Rocket Fuel</h3>
+        <center><div id="solid-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current / Max:</span></td><td class="text-right"><span class="solid-readout">alt</span> / <span class="solid-max-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Delta:</span></td><td class="text-right"><span class="solid-delta-readout">alt</span></td></tr>
+            <tr><td class="text-left"><span class="readout-label">Percent Left:</span></td><td class="text-right"><span class="solid-percent-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3 text-center"></div>
+    </div><!-- end row -->
+  
+  </div><!-- end container -->
+</body>
+</html>
+        
+        
+      

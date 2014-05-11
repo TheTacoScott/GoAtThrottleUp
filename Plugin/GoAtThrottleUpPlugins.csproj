@@ -5,8 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4839EAF6-78A7-4562-B8BE-5314E551DE53}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CameraPostScreenshot2Web</RootNamespace>
-    <AssemblyName>CameraPostScreenshot2Web</AssemblyName>
+    <RootNamespace>GoAtThrottleUpPlugins</RootNamespace>
+    <AssemblyName>GoAtThrottleUp</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -19,12 +20,16 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="xcopy /y &quot;C:\Users\Scott\Desktop\GoAtThrottleUp\Plugin\bin\Release\GoAtThrottleUp.dll&quot; &quot;E:\Steam\SteamApps\common\Kerbal Space Program\GameData\GoAtThrottleUp\Plugin&quot;" externalConsole="True" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

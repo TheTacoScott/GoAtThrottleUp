@@ -16,5 +16,6 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = GoAtThrottleUpPlugins.csproj
+		outputpath = E:\Steam\SteamApps\common\Kerbal Space Program\GameData\GoAtThrottleUp\Plugin
 	EndGlobalSection
 EndGlobal

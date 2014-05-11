@@ -131,8 +131,10 @@ $(document).ready(function() {
 });
 
 var BODIES = ["Kerbol", "Kerbin", "Mun", "Minmus", "Moho", "Eve", "Duna", "Ike", "Jool", "Laythe", "Vall", "Bop", "Tylo", "Gilly", "Pol", "Dres", "Eeloo"];
-//         kerbol kerbin   mun     minmus  moho    eve      duna     ike     jool       Laythe  Vall    Bop     Tylo     Gilly  Pol,    Dres     Eeloo
-var SPHERES = [-1,84159286,2970560,2247428,9646663,85109365,47921949,1049598,2455985200,3723645,2406401,1221060,10856518,126123,1042138,32832840,119082940];
+var SPHERES = {"Kerbol":-1,"Kerbin":84159286,"Mun":2970560,"Minmus":2247428,"Moho":9646663,"Eve":85109365,
+"Duna":47921949,"Ike":1049598,"Jool":2455985200,"Laythe":3723645,"Vall":2406401,"Bop":1221060,
+"Tylo":10856518,"Gilly":126123,"Pol":1042138,"Dres":32832840,"Eeloo":119082940};
+
 var TARGET = -1;
 
 var LARP = new Object();
@@ -881,24 +883,24 @@ GAUGES = {
 }
 function ProcessData(data)
 {
-  newdata = $.parseJSON(data.replace(/nan/g, '0'));
+
+  var newdata = $.parseJSON(data.replace(/NaN/g, '0'));
+  var updatetime = newdata["time"];
   for(var i in newdata)
   {
-    var unixtime = ((new Date).getTime()/1000);
-    var updatetime = unixtime-newdata[i][1];
-    
+    if (i == "time") { continue; }    
     if (i in $globaldata_updated)
     {
       if (updatetime > $globaldata_updated[i])
       {
-        $globaldata[i] = newdata[i][0];
-        $globaldata_updated[i] = unixtime-newdata[i][1];
+        $globaldata[i] = newdata[i];
+        $globaldata_updated[i] = updatetime;
       }
     }
     else
     {
-      $globaldata[i] = newdata[i][0];
-      $globaldata_updated[i] = unixtime-newdata[i][1];
+      $globaldata[i] = newdata[i];
+      $globaldata_updated[i] = updatetime;
     }
     
   }
@@ -906,31 +908,14 @@ function ProcessData(data)
 }
 
 function RenderData()
-{    
+{ 
+  //console.log($globaldata);
 	if ('v.missionTime' in $globaldata) { $(".mission-time-readout").text(missionTimeString($globaldata['v.missionTime'])); }
 	if ('t.universalTime' in $globaldata) { $(".u-time-readout").text(dateString($globaldata['t.universalTime'])); }
 	//signal
   
-  if ("p.paused" in $globaldata)
-  {  
-    if ($globaldata['p.paused'] > 1)
-    {
-      $(".status-light").removeClass("status-light-warning status-light-danger status-light-ok").addClass("status-light-flicker");
-      $("#signal-light").removeClass("status-light-warning status-light-flicker").addClass("status-light-danger");
-      return;
-    } else if ($globaldata['p.paused'] == 1) {
-      
-      $(".status-light").removeClass("status-light-warning status-light-danger status-light-ok").addClass("status-light-flicker");
-      $("#signal-light").removeClass("status-light-danger status-light-flicker").addClass("status-light-warning");
-      return;
-    }
-    else
-    {
-      $(".status-light").removeClass("status-light-flicker"); 
-      $("#signal-light").removeClass("status-light-danger status-light-warning");
-    }
-  }
-	if ('v.name' in $globaldata && 'v.body' in $globaldata && "v.long" in $globaldata && "v.lat" in $globaldata)
+  //console.log($globaldata_updated["v.missionTime"]);
+	if ('v.body' in $globaldata && "v.long" in $globaldata && "v.lat" in $globaldata)
 	{
 		KSPMAP.updateMap($globaldata);
 	}
@@ -976,14 +961,14 @@ function RenderData()
 	}
 	
 	//flight
-	if ('n.heading' in $globaldata && 'n.pitch' in $globaldata && 'n.roll' in $globaldata)
+	if ('v.heading' in $globaldata && 'v.pitch' in $globaldata && 'v.roll' in $globaldata)
 	{
-		$(".heading-readout").text($globaldata['n.heading'].toFixed(2));
-		$(".pitch-readout").text($globaldata['n.pitch'].toFixed(2));
-		$(".roll-readout").text($globaldata['n.roll'].toFixed(2));
-		UpdateAngleGauge("gauge-heading",$globaldata['n.heading']);
-		UpdateAngleGauge("gauge-pitch",$globaldata['n.pitch']);
-		UpdateAngleGauge("gauge-roll",$globaldata['n.roll']);
+		$(".heading-readout").text($globaldata['v.heading'].toFixed(2));
+		$(".pitch-readout").text($globaldata['v.pitch'].toFixed(2));
+		$(".roll-readout").text($globaldata['v.roll'].toFixed(2));
+		UpdateAngleGauge("gauge-heading",$globaldata['v.heading']);
+		UpdateAngleGauge("gauge-pitch",$globaldata['v.pitch']);
+		UpdateAngleGauge("gauge-roll",$globaldata['v.roll']);
 	}
 	if ('f.throttle' in $globaldata)
 	{
@@ -1023,78 +1008,72 @@ function RenderData()
 	var $eccdelta = -1;
   
   
-	if ('tar.name' in $globaldata && 'tar.distance' in $globaldata && 'o.ApA' in $globaldata && 'o.eccentricity' in $globaldata && 'o.inclination' in $globaldata)
+	if ('tar.distance' in $globaldata && 'o.ApA' in $globaldata)
 	{
-		for (var i = 2; i<BODIES.length; i++)
-		{	      
-		  if ($globaldata['tar.name'] == BODIES[i])
-		  {
-        $targetid = i;
-        $(".tar-distance-readout").text($globaldata['tar.distance'].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-        $(".tar-distance-apa-delta-readout").text(($globaldata['o.ApA'] - $globaldata['tar.distance']).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-        $datafound = true;
-        break;
-		  }	
-		}
+
+    $(".tar-distance-readout").text($globaldata['tar.distance'].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    $(".tar-distance-apa-delta-readout").text(($globaldata['o.ApA'] - $globaldata['tar.distance']).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        
 	}
   //console.log($targetid);
-  if ('b.o.phaseAngle['+$targetid+']' in $globaldata && 'b.o.eccentricity['+$targetid+']' in $globaldata && 'b.o.inclination['+$targetid+']' in $globaldata)
+  if ('tar.phaseAngle' in $globaldata && 'tar.eccentricity' in $globaldata && 'tar.inclination' in $globaldata && 'tar.name' in $globaldata)
   {
-    $(".tar-phase-readout").text($globaldata['b.o.phaseAngle['+$targetid+']'].toFixed(3));
-    $("#gauge-phaseangle").val($globaldata['b.o.phaseAngle['+$targetid+']']);
-    try
+    if ($globaldata['tar.name'] != "No Target")
     {
-      $(".tar-sphere-readout").text(SPHERES[i].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+      $(".tar-phase-readout").text($globaldata['tar.phaseAngle'].toFixed(3));
+      $("#gauge-phaseangle").val($globaldata['tar.phaseAngle']);
+      $(".tar-sphere-readout").text(SPHERES[$globaldata['tar.name']].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+      $(".tar-distance2sphere-readout").text(($globaldata['tar.distance']-SPHERES[$globaldata['tar.name']]).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+      $(".tar-eccentricity-readout").text($globaldata['tar.eccentricity'].toFixed(4));
+      $("#gauge-target-eccentricity").val($globaldata['tar.eccentricity']);
+      $(".tar-inclination-readout").text($globaldata['tar.inclination'].toFixed(4));
+      $("#gauge-target-inclination").val($globaldata['tar.inclination']);
     }
-    catch(err)
-    {
-      console.log("just wait" + err);
-    }
-    $(".tar-distance2sphere-readout").text(($globaldata['tar.distance']-SPHERES[i]).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-    $(".tar-eccentricity-readout").text($globaldata['b.o.eccentricity['+$targetid+']'].toFixed(4));
-    $("#gauge-target-eccentricity").val($globaldata['b.o.eccentricity['+$targetid+']']);
-    $(".tar-inclination-readout").text($globaldata['b.o.inclination['+$targetid+']'].toFixed(4));
-    $("#gauge-target-inclination").val($globaldata['b.o.inclination['+$targetid+']']);
-    
-    $incdelta = $globaldata['o.inclination'] - $globaldata['b.o.inclination['+$targetid+']'];
+  }
+  if ('o.inclination' in $globaldata && 'tar.inclination' in $globaldata && 'o.eccentricity' in $globaldata && 'tar.eccentricity' in $globaldata)
+  {
+    $incdelta = $globaldata['o.inclination'] - $globaldata['tar.inclination'];
     $("#gauge-inclination-delta").val($incdelta);
     $(".inclination-delta-readout").text($incdelta.toFixed(4));
     
-    $eccdelta = $globaldata['o.eccentricity'] - $globaldata['b.o.eccentricity['+$targetid+']'];
+    $eccdelta = $globaldata['o.eccentricity'] - $globaldata['tar.eccentricity'];
     $("#gauge-eccentricity-delta").val($eccdelta);
     $(".eccentricity-delta-readout").text($eccdelta.toFixed(4));
   }
   
-	if (!$datafound && 'tar.name' in $globaldata)
+	if ('tar.name' in $globaldata)
 	{
-		$(".tar-distance-readout").text("ERR");
-		$(".tar-distance-apa-delta-readout").text("ERR");
-		$(".tar-phase-readout").text("ERR");
-		$("#gauge-phaseangle").val(0);
-		$(".tar-sphere-readout").text("ERR");
-		$(".tar-distance2sphere-readout").text("ERR");
-		$(".tar-eccentricity-readout").text("ERR");
-		$("#gauge-target-eccentricity").val(0);
-		$(".tar-inclination-readout").text("ERR");
-		$("#gauge-target-inclination").val(0);            
-		$("#gauge-inclination-delta").val(0);
-		$(".inclination-delta-readout").text("ERR");
-		$("#gauge-eccentricity-delta").val(0);
-		$(".eccentricity-delta-readout").text("ERR");
+    if ($globaldata['tar.name']=="No Target")
+    {
+      $(".tar-distance-readout").text("ERR");
+      $(".tar-distance-apa-delta-readout").text("ERR");
+      $(".tar-phase-readout").text("ERR");
+      $("#gauge-phaseangle").val(0);
+      $(".tar-sphere-readout").text("ERR");
+      $(".tar-distance2sphere-readout").text("ERR");
+      $(".tar-eccentricity-readout").text("ERR");
+      $("#gauge-target-eccentricity").val(0);
+      $(".tar-inclination-readout").text("ERR");
+      $("#gauge-target-inclination").val(0);            
+      $("#gauge-inclination-delta").val(0);
+      $(".inclination-delta-readout").text("ERR");
+      $("#gauge-eccentricity-delta").val(0);
+      $(".eccentricity-delta-readout").text("ERR");
+    }
 	}
 
 	//ROW
 	//ship status
 	if ("v.rcsValue" in $globaldata)
 	{
-		if ($globaldata["v.rcsValue"] == "True") 
+		if ($globaldata["v.rcsValue"] == 1) 
 		{ $("#rcs-light").addClass("status-light-ok"); }
 		else 
 		{ $("#rcs-light").removeClass("status-light-ok").addClass("status-light-default"); }
 	}
 	if ("v.sasValue" in $globaldata)
 	{
-		if ($globaldata["v.sasValue"] == "True") 
+		if ($globaldata["v.sasValue"] == 1) 
 		{ $("#sas-light").addClass("status-light-ok"); }
 		else 
 		{ $("#sas-light").removeClass("status-light-ok").addClass("status-light-default"); }
@@ -1102,21 +1081,21 @@ function RenderData()
 	
 	if ("v.gearValue" in $globaldata)
 	{
-		if ($globaldata["v.gearValue"] == "True") 
+		if ($globaldata["v.gearValue"] == 1) 
 		{ $("#gears-light").addClass("status-light-ok"); }
 		else 
 		{ $("#gears-light").removeClass("status-light-ok").addClass("status-light-default"); }
 	}
 	if ("v.lightValue" in $globaldata)
 	{
-		if ($globaldata["v.lightValue"] == "True") 
+		if ($globaldata["v.lightValue"] == 1) 
 		{ $("#lights-light").addClass("status-light-ok"); }
 		else 
 		{ $("#lights-light").removeClass("status-light-ok").addClass("status-light-default"); }
 	}
 	if ("v.brakeValue" in $globaldata)
 	{
-		if ($globaldata["v.brakeValue"] == "True") 
+		if ($globaldata["v.brakeValue"] == 1) 
 		{ $("#brakes-light").addClass("status-light-ok"); }
 		else 
 		{ $("#brakes-light").removeClass("status-light-ok").addClass("status-light-default"); }
@@ -1342,7 +1321,7 @@ function RenderData()
 	//target
 	if ('tar.name' in $globaldata)
 	{
-		if ($globaldata['tar.name'] == "No Target Selected.")
+		if ($globaldata['tar.name'] == "No Target")
 		{
 		  $("#target-light").removeClass("status-light-info");
 		} else {
@@ -1350,18 +1329,37 @@ function RenderData()
 		}
 	}
   
-  if ('p.paused' in $globaldata_updated && 'v.rcsValue' in $globaldata_updated && "n.heading" in $globaldata_updated)
+  if ("v.missionTime" in $globaldata_updated)
 	{
-    var diff1 = ((new Date).getTime()/1000) - $globaldata_updated['p.paused'];
-    var diff2 = ((new Date).getTime()/1000) - $globaldata_updated['v.rcsValue'];
-    var diff3 = ((new Date).getTime()/1000) - $globaldata_updated['n.heading'];
-    //console.log([diff1,diff2,diff3]);
-		if (diff1 < 1 && diff2 < 2 && diff3 < 6)
-		{
-		  $("#dataflow-light").addClass("status-light-info");
-		} else {
-		  $("#dataflow-light").removeClass("status-light-info");
-		}
+    var previousUpdate = $("#dataflow-light").data("lastupdate");
+    var previousUT = $("#dataflow-light").data("lastut");
+    
+    if (previousUpdate == undefined || previousUT == undefined) { 
+      $("#dataflow-light").data("lastupdate",new Date().getTime());
+      $("#dataflow-light").data("lastut",$globaldata['t.universalTime']);
+    }
+    else
+    {
+      if (previousUT < $globaldata['t.universalTime'])
+      {
+        $("#dataflow-light").data("lastupdate",new Date().getTime());
+        $("#dataflow-light").data("lastut",$globaldata['t.universalTime']);
+      }
+      diff1 = new Date().getTime()-previousUpdate;
+      
+      console.log(diff1);
+      if(diff1 < 2000)
+      {
+        $("#dataflow-light").removeClass("status-light-warning").addClass("status-light-info");       
+      } else if  ( diff1 >= 2000 && diff1 < 3500 )
+      {
+        $("#dataflow-light").removeClass("status-light-info").addClass("status-light-warning");
+      }
+      else
+      {
+        $("#dataflow-light").removeClass("status-light-info status-light-warning");
+      }
+    }
 	}
   if ('o.ApA' in $globaldata && 'o.PeA' in $globaldata)
   {
@@ -1375,11 +1373,11 @@ function RenderData()
     }
     
   }
-  if ('tar.distance' in $globaldata)
+  if ('tar.distance' in $globaldata && 'tar.name' in $globaldata)
   {
     try
     {
-      if ($globaldata['tar.distance']-SPHERES[i] < 500000)
+      if ($globaldata['tar.distance']-SPHERES[$globaldata['tar.name']] < 500000)
       {
          $("#sphere-light").addClass("status-light-info");
       }
@@ -1423,7 +1421,6 @@ LARP = {
   },
   LINK: {
     init: function() {
-      
       function GetHighData()
       {
         $.get("http://" + window.location.host + "/high.api",function(data) { 
@@ -1440,7 +1437,7 @@ LARP = {
       {
         $.get("http://" + window.location.host + "/med.api",function(data) { 
           ProcessData(data);
-          setTimeout(function() { GetMedData(); } ,500);
+          setTimeout(function() { GetMedData(); } ,400);
         })
         .fail(function()
         {
@@ -1452,7 +1449,7 @@ LARP = {
       {
         $.get("http://" + window.location.host + "/low.api",function(data) { 
           ProcessData(data);
-          setTimeout(function() { GetLowData(); } ,1000);
+          setTimeout(function() { GetLowData(); } ,900);
         })
         .fail(function()
         {
@@ -1460,33 +1457,19 @@ LARP = {
           setTimeout(function() { GetLowData(); },5000);
         });
       }
-      function GetBulkData()
-      {
-        $.get("http://" + window.location.host + "/bulk.api",function(data) { 
-          ProcessData(data);
-          setTimeout(function() { GetBulkData(); } ,750);
-        })
-        .fail(function()
-        {
-          console.log("Failed Getting Data");
-          setTimeout(function() { GetBulkData(); },3000);
-        });
-      }
       
       function LoopRenderData()
       {
         RenderData();
-        setTimeout(function() { LoopRenderData(); } ,300);
+        setTimeout(function() { LoopRenderData(); } ,250);
         
       }
       
       GetHighData();
       GetMedData();
       GetLowData();
-      GetBulkData();
       LoopRenderData();
-      
-
+    
     }
   }
 }

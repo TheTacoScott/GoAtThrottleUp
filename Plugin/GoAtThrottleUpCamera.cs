@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-//using System.IO;
 using System.Collections;
 
 public class GoAtThrottleUpCamera: PartModule
@@ -40,9 +39,6 @@ public class GoAtThrottleUpCamera: PartModule
 
 	[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "Capture Frequency")]
 	public float freq = 1.0f;
-
-	//[KSPField(guiActive = true, guiActiveEditor = false, guiName = "Vertical Hold"), UI_FloatRange(minValue = 0.0f, maxValue = 100.0f, stepIncrement = 1f)]
-	//public float vhold = 1.0f;
 
 	[KSPField(guiActive = true, guiActiveEditor = false, guiName = "Status")]
 	public string status = "Nominal";
@@ -90,7 +86,6 @@ public class GoAtThrottleUpCamera: PartModule
 	private IEnumerator PostScreenshot(byte[] bytes)
 	{
 		string postlocation = "http://" + posthost + ":" + postport + "/" + posturi;
-		print("TACO PostScreenshot:" + postlocation);	
 		var epochStart = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
 		var timestamp = (System.DateTime.UtcNow - epochStart).TotalSeconds;
 		string timestampasstring = timestamp.ToString();
@@ -113,7 +108,6 @@ public class GoAtThrottleUpCamera: PartModule
 
 	public void RenderCamera()
 	{
-		print("TACO RenderCamera");	
 		if (this.vessel != FlightGlobals.ActiveVessel) { return;}
 
 		if (this.part == null || this.part.vessel != FlightGlobals.ActiveVessel ) 
@@ -164,7 +158,6 @@ public class GoAtThrottleUpCamera: PartModule
 	public override void OnUpdate()
 	{
 
-		//print("TACO FIXED UPDATE:" + Time.time + " " + nextRenderTime);
 		if (nextRenderTime > 0 && Time.time >= nextRenderTime) {
 			nextRenderTime = -1;
 			RenderCamera ();
@@ -184,21 +177,21 @@ public class GoAtThrottleUpCamera: PartModule
 			foreach (Camera cam in Camera.allCameras) {	if (cam.name == "Camera 01") {sourceFarCam = cam;break;}}
 			foreach (Camera cam in Camera.allCameras) {	if (cam.name == "Camera ScaledSpace") {sourceSkyCam = cam;break;}}
 
-			var NearCameraGameObject = new GameObject ("KSP Larp Cam Camera 00");
+			var NearCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera 00");
 			NearCamera = NearCameraGameObject.AddComponent<Camera> ();
 			NearCamera.CopyFrom (sourceNearCam);
 			NearCamera.enabled = false;
 			NearCamera.fieldOfView = fovAngle;
 			NearCamera.aspect = aspect;
 
-			var FarCameraGameObject = new GameObject ("KSP Larp Cam Camera 01");
+			var FarCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera 01");
 			FarCamera = FarCameraGameObject.AddComponent<Camera> ();
 			FarCamera.CopyFrom (sourceFarCam);
 			FarCamera.enabled = false;
 			FarCamera.fieldOfView = fovAngle;
 			FarCamera.aspect = aspect;
 
-			var SkyboxCameraGameObject = new GameObject ("KSP Larp Cam Camera ScaledSpace");
+			var SkyboxCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera ScaledSpace");
 			SkyboxCamera = SkyboxCameraGameObject.AddComponent<Camera> ();
 			SkyboxCamera.transform.position = sourceSkyCam.transform.position;
 			SkyboxCamera.CopyFrom (sourceSkyCam);

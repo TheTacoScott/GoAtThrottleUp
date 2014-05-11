@@ -241,7 +241,7 @@ color: #EEEEEE;
   bottom: 0.5vh;
   left: 40vw;
   width: 20vw;
-  height: 25vh;
+  height: 30vh;
 }
 #full-landing-map-br
 {
@@ -282,7 +282,7 @@ color: #EEEEEE;
   bottom: 0.5vh;
   left: 40vw;
   width: 20vw;
-  height: 25vh;
+  height: 30vh;
   background:url("/static/img/static2.gif");
   background-size: cover;
 }

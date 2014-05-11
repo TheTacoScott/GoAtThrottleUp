@@ -2,7 +2,7 @@
   <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title>KSP LARP - Lights</title>
+      <title>GoForThrottleUp - Lights</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
 
@@ -58,7 +58,7 @@
         <div id="brakes-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Green if Brakes are engaged.">Brakes<br><span class="glyphicon glyphicon-stop"></span></div>
       </div>
       <div class="col-md-2">
-        <div id="signal-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Off if there are no signal issues. Yellow if paused. Red if other issues.">Signal<br><span class="glyphicon glyphicon-signal"></span></div>
+        <div id="dataflow-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Blue if data we have is fresh. Off if it's old.">Data Flow<br><span class="glyphicon glyphicon-transfer"></span></div>
       </div>
     </div>
     <div class="row">
@@ -81,10 +81,8 @@
         <div id="mono-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Yellow if < 15%. Red if < 5%">Mono Prop<br><span class="glyphicon glyphicon-dashboard"></span></div>
       </div>
     </div>
+    <hr class="status-light-hr">
     <div class="row">
-      <div class="col-md-2">
-        <div id="dataflow-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Blue if data we have is fresh. Off if it's old.">Data Flow<br><span class="glyphicon glyphicon-transfer"></span></div>
-      </div>
       <div class="col-md-2">
         <div id="target-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Blue if a target is set.">Target<br><span class="glyphicon glyphicon-screenshot"></span></div>
       </div>
@@ -100,8 +98,11 @@
       <div class="col-md-2">
         <div id="orbit-light" class="status-light text-center">Orbit<br><span class="glyphicon glyphicon-repeat"></span></div>
       </div>
+      <div class="col-md-2">
+        <div id="encounter-light" class="status-light text-center">Encounter<br><span class="glyphicon glyphicon-magnet"></span></div>
+      </div>
     </div>
-    <hr>
+    <hr class="status-light-hr">
     <div class="row">
       <div class="col-md-2">
         <div id="tumble-light" class="status-light text-center" data-container="body" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Red if you are < 500m from terrain and your surface speed is > 5m/s. Yellow if you are < 500m from terrain and your surface speed is > 2.5m/s.">Tumble<br><span class="glyphicon glyphicon-refresh"></span></div>
@@ -135,7 +136,34 @@
       <div class="col-md-2">
         <div id="escape-light" class="status-light text-center">Escape<br><span class="glyphicon glyphicon-send"></span></div>
       </div>
+      <div class="col-md-2">
+        <div id="gearalarm-light" class="status-light text-center">Gear<br><span class="glyphicon glyphicon-cog"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="comms-light" class="status-light text-center">Comms<br><span class="glyphicon glyphicon-headphones"></span></div>
+      </div>
+      
     </div> 
+    <div class="row">
+      <div class="col-md-2">
+        <div id="camerafault-light" class="status-light text-center">Fault<br><span class="glyphicon glyphicon-facetime-video"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="camerafault-light" class="status-light text-center">Fault<br><span class="glyphicon glyphicon-signal"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="camerafault-light" class="status-light text-center">Fault<br><span class="glyphicon glyphicon-signal"></span></div>
+      </div>
+            <div class="col-md-2">
+        <div id="solarfault-light" class="status-light text-center">Fault<br><span class="glyphicon glyphicon-signal"></span></div>
+      </div>
+      <div class="col-md-2">
+        <div id="rcsfault-light" class="status-light text-center">Fault<br><span class="glyphicon glyphicon-signal"></span></div>
+      </div>
+            <div class="col-md-2">
+        <div id="otherfault-light" class="status-light text-center">Fault<br><span class="glyphicon glyphicon-signal"></span></div>
+      </div>
+    </div>
 
     
     

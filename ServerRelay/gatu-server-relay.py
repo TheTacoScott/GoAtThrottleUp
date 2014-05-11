@@ -28,7 +28,10 @@ def postdata():
         for keyname in gatu.bottle.request.POST.dict:
           if keyname in ["type"]: continue
           if keyname not in gatu.globals.stringTypes: 
-            gatu.globals.low_data[keyname] = float(gatu.bottle.request.POST.get(keyname))
+            try:
+              gatu.globals.low_data[keyname] = float(gatu.bottle.request.POST.get(keyname))
+            except:
+              print keyname,gatu.bottle.request.POST.get(keyname)
           else:
             gatu.globals.low_data[keyname] = gatu.bottle.request.POST.get(keyname)
           

@@ -53,6 +53,8 @@ public class GoAtThrottleUpAntenna: PartModule
 		DoubleValues["tar.eccentricity"] = double.NaN;
 		DoubleValues ["tar.trueAnomaly"] = double.NaN;
 		DoubleValues ["tar.phaseAngle"] = double.NaN;
+		DoubleValues ["tar.SOI"] = double.NaN;
+
 
 		if (FlightGlobals.fetch.VesselTarget != null) {
 			StringValues["tar.name"]         = FlightGlobals.fetch.VesselTarget.GetName ();
@@ -137,12 +139,14 @@ public class GoAtThrottleUpAntenna: PartModule
 		DoubleValues["o.timeToPe"] = this.vessel.orbit.timeToPe;
 		DoubleValues["o.inclination"] = this.vessel.orbit.inclination;
 		DoubleValues["o.eccentricity"] = this.vessel.orbit.eccentricity;
-
 		//Resource data
 		System.Collections.Generic.Dictionary<string, double> ResourceCurrent = new System.Collections.Generic.Dictionary<string, double>();
 		System.Collections.Generic.Dictionary<string, double> ResourceMax = new System.Collections.Generic.Dictionary<string, double>();
 
+		DoubleValues ["v.overheatRatio"] = 0.0d;
+
 		foreach (Part part in this.vessel.parts) {
+			//resources
 			if (part.Resources.Count > 0) {
 				foreach (PartResource partResource in part.Resources) {
 					if (!ResourceCurrent.ContainsKey(partResource.resourceName)) { ResourceCurrent [partResource.resourceName] = 0; }
@@ -151,8 +155,21 @@ public class GoAtThrottleUpAntenna: PartModule
 					ResourceMax     [partResource.resourceName] += partResource.maxAmount;
 				}
 			}
+			//overheat
+			foreach (PartModule pm in part.Modules) {
+				if (!pm.isEnabled) { continue; }
+				var thatEngineModule = pm as ModuleEngines;
+				var thatEngineModuleFX = pm as ModuleEnginesFX;
+				if (thatEngineModule != null || thatEngineModuleFX != null) {
+					double thistempratio = part.temperature / part.maxTemp;
+					DoubleValues ["v.overheatRatio"] = (thistempratio > DoubleValues ["v.overheatRatio"]) ? thistempratio : DoubleValues ["v.overheatRatio"];
+				}
+			}
 		}
+		DoubleValues ["v.overheat"] = 0.0;
+		foreach (Part thatPart in this.vessel.parts) {
 
+		}
 		//POST DATA
 		var form = new WWWForm();
 		form.AddField("type", "med");
@@ -183,11 +200,15 @@ public class GoAtThrottleUpAntenna: PartModule
 		//Vessel Data
 		print ("GetAndSendLowPollData:" + postlocation);
 		System.Collections.Generic.Dictionary<string, double> DoubleValues = new System.Collections.Generic.Dictionary<string, double>();
+		System.Collections.Generic.Dictionary<string, string> StringValues = new System.Collections.Generic.Dictionary<string, string>();
+
 		Quaternion result = updateHeadingPitchRollField(this.vessel);
 		DoubleValues["v.heading"] = result.eulerAngles.y;
 		DoubleValues["v.pitch"] = (result.eulerAngles.x > 180) ? (360.0 - result.eulerAngles.x) : -result.eulerAngles.x;
 		DoubleValues["v.roll"] = (result.eulerAngles.z > 180)  ? (result.eulerAngles.z - 360.0) : result.eulerAngles.z;
-
+		DoubleValues ["v.encounter"] = (this.vessel.orbit.patchEndTransition == Orbit.PatchTransitionType.ENCOUNTER) ? 1d : 0d;
+		DoubleValues ["v.escape"] = (this.vessel.orbit.patchEndTransition == Orbit.PatchTransitionType.ESCAPE) ? 1d : 0d;
+		StringValues ["v.encounter.body"] = (this.vessel.orbit.patchEndTransition == Orbit.PatchTransitionType.ENCOUNTER) ? vessel.orbit.nextPatch.referenceBody.bodyName : "None";
 
 		//POST DATA
 		var form = new WWWForm();
@@ -196,6 +217,10 @@ public class GoAtThrottleUpAntenna: PartModule
 		foreach (System.Collections.Generic.KeyValuePair<string, double> entry in DoubleValues)
 		{
 			form.AddField(entry.Key,entry.Value.ToString());
+		}
+		foreach (System.Collections.Generic.KeyValuePair<string, string> entry in StringValues)
+		{
+			form.AddField(entry.Key, entry.Value);
 		}
 
 		var post = new WWW(postlocation,form);

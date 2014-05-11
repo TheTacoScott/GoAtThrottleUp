@@ -38,9 +38,9 @@ var $globaldata = {};
 var $globaldata_updated = {};
 var $animatespeed = 100;
 
-var $imglow  = "http://localhost:8080/image.get/1";
-var $imgmed  = "http://localhost:8080/image.get/2";
-var $imghigh = "http://localhost:8080/image.get/3";
+var $imglow  = "/image.get/1";
+var $imgmed  = "/image.get/2";
+var $imghigh = "/image.get/3";
 
 
 function missionTimeString(t) 
@@ -127,7 +127,7 @@ $(document).ready(function() {
   LARP.startUp();
   KSPMAP.startUp();
   $(".status-light").popover();
-  $("#linksbar").html('( <a href="landing.html">Landing</a> | <a href="levels.html">Levels</a> | <a href="orbit.html">Encounter</a> | <a href="flight.html">Guidance</a> | <a href="lights.html">Lights</a> | <a href="big.html">Big Screen</a> | <a href="rover.html">Rover</a> )');
+  $("#linksbar").html('( <a href="landing.html">Landing</a> | <a href="levels.html">Levels</a> | <a href="orbit.html">Encounter</a> | <a href="flight.html">Guidance</a> | <a href="lights.html">Lights</a> | <a href="big.html">Big Screen</a> | <a href="cameras.html">Cameras</a> )');
 });
 
 var BODIES = ["Kerbol", "Kerbin", "Mun", "Minmus", "Moho", "Eve", "Duna", "Ike", "Jool", "Laythe", "Vall", "Bop", "Tylo", "Gilly", "Pol", "Dres", "Eeloo"];
@@ -1020,6 +1020,8 @@ function RenderData()
   {
     if ($globaldata['tar.name'] != "No Target")
     {
+      //console.log("Heat?" + $globaldata["v.overheatRatio"]);
+      //console.log($globaldata["v.geeForce"]);
       $(".tar-phase-readout").text($globaldata['tar.phaseAngle'].toFixed(3));
       $("#gauge-phaseangle").val($globaldata['tar.phaseAngle']);
       $(".tar-sphere-readout").text(SPHERES[$globaldata['tar.name']].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
@@ -1347,23 +1349,28 @@ function RenderData()
       }
       diff1 = new Date().getTime()-previousUpdate;
       
-      console.log(diff1);
+      //console.log(diff1);
       if(diff1 < 2000)
       {
-        $("#dataflow-light").removeClass("status-light-warning").addClass("status-light-info");       
+        $(".status-light").removeClass("status-light-flicker");
+        $("#dataflow-light").removeClass("status-light-warning status-light-danger status-light-flicker").addClass("status-light-info");       
       } else if  ( diff1 >= 2000 && diff1 < 3500 )
       {
-        $("#dataflow-light").removeClass("status-light-info").addClass("status-light-warning");
+        $(".status-light").removeClass("status-light-flicker");
+        $("#dataflow-light").removeClass("status-light-info status-light-danger status-light-flicker").addClass("status-light-warning");
       }
       else
       {
-        $("#dataflow-light").removeClass("status-light-info status-light-warning");
+        
+        $(".status-light").addClass("status-light-flicker");
+        $("#dataflow-light").removeClass("status-light-info status-light-warning status-light-flicker").addClass("status-light-danger");
+        
       }
     }
 	}
-  if ('o.ApA' in $globaldata && 'o.PeA' in $globaldata)
+  if ("v.escape" in $globaldata)
   {
-    if (($globaldata['o.ApA'] < 0 && $globaldata['o.PeA'] > 0) || ($globaldata['o.ApA'] < -1000000) )
+    if ($globaldata["v.escape"])
     {
       $("#escape-light").addClass("status-light-danger");
     }
@@ -1371,8 +1378,50 @@ function RenderData()
     {
        $("#escape-light").removeClass("status-light-danger");
     }
-    
   }
+  if ("v.encounter" in $globaldata)
+  {
+    if ($globaldata["v.encounter"])
+    {
+      $("#encounter-light").addClass("status-light-ok");
+    }
+    else
+    {
+       $("#encounter-light").removeClass("status-light-ok");
+    }
+  }
+  
+  if ("v.overheatRatio" in $globaldata)
+  {
+    if ($globaldata["v.overheatRatio"] >= 0.7 && $globaldata["v.overheatRatio"] <= 0.9)
+    {
+      $("#overheat-light").removeClass("status-light-danger").addClass("status-light-warning");
+    }
+    else if ($globaldata["v.overheatRatio"] >= 0.9)
+    {
+       $("#overheat-light").removeClass("status-light-warning").addClass("status-light-danger");
+    }
+    else
+    {
+      $("#overheat-light").removeClass("status-light-warning status-light-danger");
+    }
+  }
+  if ("v.geeForce" in $globaldata)
+  {
+    if ($globaldata["v.geeForce"] >= 6 && $globaldata["v.overheatRatio"] < 8)
+    {
+      $("#gforce-light").removeClass("status-light-danger").addClass("status-light-warning");
+    }
+    else if ($globaldata["v.geeForce"] >= 8)
+    {
+       $("#gforce-light").removeClass("status-light-warning").addClass("status-light-danger");
+    }
+    else
+    {
+      $("#gforce-light").removeClass("status-light-warning status-light-danger");
+    }
+  }
+  
   if ('tar.distance' in $globaldata && 'tar.name' in $globaldata)
   {
     try
@@ -1411,8 +1460,7 @@ function RenderData()
   
 }
 	
-	
-	
+
   
 
 LARP = {  
@@ -1425,7 +1473,7 @@ LARP = {
       {
         $.get("http://" + window.location.host + "/high.api",function(data) { 
           ProcessData(data);
-          setTimeout(function() { GetHighData(); } ,150);
+          setTimeout(function() { GetHighData(); } ,000);
         })
         .fail(function()
         {
@@ -1464,12 +1512,44 @@ LARP = {
         setTimeout(function() { LoopRenderData(); } ,250);
         
       }
-      
+      function UpdateMutliCameras($cameraid)
+      {
+        //console.log("UpdateMutliCameras:" + $cameraid);
+        var $divactive  = "#camera"+$cameraid+"-active";
+        var $divpassive = "#camera"+$cameraid+"-passive";
+        var $url = "/image.get/" + $cameraid + "?" + Math.random();
+        
+        if ($($divactive).length > 0)
+        {
+          //console.log($url);
+          $($divpassive).css("background-image","url("+$url+")")
+          $($divactive).fadeIn(100,function(){
+            $($divactive).fadeOut(200,function(){
+              $($divactive).css("background-image","url("+$url+")");
+              $($divactive).fadeIn(0);
+              setTimeout(function() { UpdateMutliCameras($cameraid); },10);    
+
+            });
+          });
+        }
+
+      }
       GetHighData();
       GetMedData();
       GetLowData();
       LoopRenderData();
-    
+      UpdateMutliCameras(1);
+      UpdateMutliCameras(2);
+      UpdateMutliCameras(3);
+      UpdateMutliCameras(4);
+      UpdateMutliCameras(5);
+      UpdateMutliCameras(6);
+      UpdateMutliCameras(7);
+      UpdateMutliCameras(8);
+      
+      
+      
+      
     }
   }
 }

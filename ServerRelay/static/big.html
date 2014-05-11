@@ -2,7 +2,7 @@
   <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title>KSP LARP - Big Screen</title>
+      <title>GoForThrottleUp - Big Screen</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
       <!-- CSS -->
@@ -38,16 +38,26 @@
     </div><!-- end row -->
   </div><!-- end container -->
 
-  <img id="bmhelper" class="hidden" src="">
-  <img id="blhelper" class="hidden" src="">
-  <img id="brhelper" class="hidden" src="">
-  <div id="full-landing-map-bm-overlay"></div>
-  <div id="full-landing-map-bl-overlay"></div>
-  <div id="full-landing-map-br-overlay"></div>
+ 
+  <div id="full-landing-map-bl">
+    <div class="camera-wrapper">
+      <div id="camera1-active" class="grid-camera-display grid-camera-display-active"></div>
+      <div id="camera1-passive" class="grid-camera-display grid-camera-display-passive"></div>
+      <div class="grid-camera-display grid-camera-display-static"></div>
+    </div>
+  </div>
   
-  <div id="full-landing-map-bl"></div>
-  <div id="full-landing-map-br"></div>
-  <div id="full-landing-map-bm"></div>
+  <div id="full-landing-map-br">
+    <div class="camera-wrapper">
+      <div id="camera2-active" class="grid-camera-display grid-camera-display-active"></div>
+      <div id="camera2-passive" class="grid-camera-display grid-camera-display-passive"></div>
+      <div class="grid-camera-display grid-camera-display-static"></div>
+    </div>
+  </div>
+
+        
+        
+  
   
   <div id="full-landing-map-top" class="text-center">
     

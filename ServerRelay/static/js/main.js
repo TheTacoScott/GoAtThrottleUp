@@ -1473,7 +1473,7 @@ LARP = {
       {
         $.get("http://" + window.location.host + "/high.api",function(data) { 
           ProcessData(data);
-          setTimeout(function() { GetHighData(); } ,000);
+          setTimeout(function() { GetHighData(); } ,150);
         })
         .fail(function()
         {

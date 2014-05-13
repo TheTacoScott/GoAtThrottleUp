@@ -1,16 +1,13 @@
 import gatu.bottle
 import gatu.globals
 
-import cherrypy
 import logging
 import threading
 import json
 import time
 import os
 import random
-from pprint import pprint
 
-gatu.globals.api_endpoint = "http://127.0.0.1:8085/telemachus/datalink"
 gatu.globals.webport = 8080
 
 logging.basicConfig(level=logging.WARNING, format="[%(levelname)s]\t[%(asctime)s] [%(filename)s:%(lineno)d] [%(funcName)s] %(message)s")
@@ -31,7 +28,7 @@ def postdata():
             try:
               gatu.globals.low_data[keyname] = float(gatu.bottle.request.POST.get(keyname))
             except:
-              print keyname,gatu.bottle.request.POST.get(keyname)
+              logging.critical(str(keyname,gatu.bottle.request.POST.get(keyname)))
           else:
             gatu.globals.low_data[keyname] = gatu.bottle.request.POST.get(keyname)
           
@@ -126,5 +123,5 @@ def lowdata():
   return json.dumps(return_data)     
 
 logging.info("Bottle is running")
-gatu.bottle.run(host='0.0.0.0',port=gatu.globals.webport,quiet=False,debug=False,reloader=True,server="cherrypy")
+gatu.bottle.run(host='0.0.0.0',port=gatu.globals.webport,quiet=False,debug=False,reloader=True,server="paste")
 logging.info("Full Exited")

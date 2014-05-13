@@ -7,6 +7,7 @@ import json
 import time
 import os
 import random
+import base64
 
 gatu.globals.webport = 8080
 
@@ -77,6 +78,8 @@ def postimage():
       if camtime > gatu.globals.camera_updated[camid]:
         gatu.globals.camera_data[camid] = camimage
         gatu.globals.camera_updated[camid] = camtime
+      else:
+        logging.critical(str((camid,camtime,len(camimage)),"NOT NEWER"))
     else:
       gatu.globals.camera_data[camid] = camimage
       gatu.globals.camera_updated[camid] = camtime
@@ -91,7 +94,16 @@ def getimage(camid):
       return_data = gatu.globals.camera_data[camid]
   gatu.bottle.response.headers['Content-Type'] = 'image/png'
   return return_data
-    
+
+@gatu.bottle.route('/imageb64.get/<camid>')
+def getimage(camid):
+  return_data = b""
+  camid = int(camid)
+  with gatu.globals.camera_data_lock:
+    if camid in gatu.globals.camera_data:
+      return_data = base64.b64encode(gatu.globals.camera_data[camid])
+  
+  return return_data  
 
 @gatu.bottle.route('/')
 def index():

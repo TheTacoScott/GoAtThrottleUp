@@ -1517,18 +1517,22 @@ LARP = {
         //console.log("UpdateMutliCameras:" + $cameraid);
         var $divactive  = "#camera"+$cameraid+"-active";
         var $divpassive = "#camera"+$cameraid+"-passive";
-        var $url = "/image.get/" + $cameraid + "?" + Math.random();
+        var $url = "/imageb64.get/" + $cameraid + "?" + Math.random();
         
         if ($($divactive).length > 0)
-        {
-          //console.log($url);
-          $($divpassive).css("background-image","url("+$url+")")
-          $($divactive).fadeIn(100,function(){
-            $($divactive).fadeOut(200,function(){
-              $($divactive).css("background-image","url("+$url+")");
-              $($divactive).fadeIn(0);
-              setTimeout(function() { UpdateMutliCameras($cameraid); },10);    
-
+        {         
+          $.get($url,function(data)
+          {
+            console.log("balls");
+            $($divpassive).css("background-image","url(data:image/png;base64," + data + ")");
+            $($divactive).fadeOut(100 + Math.floor((Math.random() * 100)) ,function(){
+              $($divactive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
+              $($divactive).css("background-image","url(data:image/png;base64," + data + ")");
+              $($divactive).fadeIn(10,function()
+              {
+                $($divpassive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
+                setTimeout(function() { UpdateMutliCameras($cameraid); },100 + Math.floor((Math.random() * 100)));    
+              });
             });
           });
         }

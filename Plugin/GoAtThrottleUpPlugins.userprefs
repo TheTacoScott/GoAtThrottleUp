@@ -2,10 +2,10 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
   <MonoDevelop.Ide.Workbench ActiveDocument="GoAtThrottleUpCamera.cs">
     <Files>
-      <File FileName="GoAtThrottleUpAntenna.cs" Line="126" Column="66" />
-      <File FileName="GoAtThrottleUpCamera.cs" Line="157" Column="16" />
-      <File FileName="helpers.cs" Line="2" Column="1" />
-      <File FileName="post-build.bat" Line="30" Column="6" />
+      <File FileName="GoAtThrottleUpAntenna.cs" Line="16" Column="42" />
+      <File FileName="GoAtThrottleUpCamera.cs" Line="26" Column="42" />
+      <File FileName="helpers.cs" Line="1" Column="1" />
+      <File FileName="post-build.bat" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

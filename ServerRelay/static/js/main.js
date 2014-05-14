@@ -1471,7 +1471,7 @@ LARP = {
     init: function() {
       function GetHighData()
       {
-        $.get("http://" + window.location.host + "/high.api",function(data) { 
+        $.get("http://" + window.location.host + "/getapi/high",function(data) { 
           ProcessData(data);
           setTimeout(function() { GetHighData(); } ,150);
         })
@@ -1483,7 +1483,7 @@ LARP = {
       }
       function GetMedData()
       {
-        $.get("http://" + window.location.host + "/med.api",function(data) { 
+        $.get("http://" + window.location.host + "/getapi/med",function(data) { 
           ProcessData(data);
           setTimeout(function() { GetMedData(); } ,400);
         })
@@ -1495,7 +1495,7 @@ LARP = {
       }
       function GetLowData()
       {
-        $.get("http://" + window.location.host + "/low.api",function(data) { 
+        $.get("http://" + window.location.host + "/getapi/low",function(data) { 
           ProcessData(data);
           setTimeout(function() { GetLowData(); } ,900);
         })

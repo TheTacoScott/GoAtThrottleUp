@@ -21,9 +21,9 @@ namespace GATU
 		[KSPField]
 		public string postport = "8080";
 		[KSPField]
-		public string posturi = "data.post";
+		public string posturi = "setapi";
 		[KSPField]
-		public string cameraposturi = "image.post";
+		public string cameraposturi = "setimage";
 
 		private bool hasParentAntenna = false;
 

@@ -1,9 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GoAtThrottleUpAntenna.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="post-build.bat">
     <Files>
-      <File FileName="GoAtThrottleUpAntenna.cs" Line="1" Column="1" />
+      <File FileName="GoAtThrottleUpAntenna.cs" Line="27" Column="43" />
       <File FileName="GoAtThrottleUpCamera.cs" Line="1" Column="1" />
+      <File FileName="post-build.bat" Line="17" Column="40" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -4,29 +4,37 @@ echo --------------------------------------------
 echo   Doing Post Build Foo ON: %COMPUTERNAME%
 echo --------------------------------------------
 
-if "%COMPUTERNAME%" == "SCOTT-PC2" set kerbalplug=C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\GoAtThrottleUp\Plugin
-if "%COMPUTERNAME%" == "SCOTT-PC2" set kerbalpart=C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\GoAtThrottleUp\Parts
+if "%COMPUTERNAME%" == "SCOTT-PC2" set kerbalplug=C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\GoAtThrottleUp\
+if "%COMPUTERNAME%" == "SCOTT-PC2" set ziploc=c:\Program Files\7-Zip\7z.exe
 
 echo.
-echo --------------------------------------------
 echo           Cleaning Up Enviroment
 echo --------------------------------------------
-rmdir /s /q "%kerbalpart%"
 rmdir /s /q "%kerbalplug%"
-mkdir "%kerbalpart%"
 mkdir "%kerbalplug%"
+mkdir "%kerbalplug%\Plugin"
+mkdir "%kerbalplug%\Parts"
 
 echo.
-echo --------------------------------------------
 echo        Copying Plugin into folder 
 echo --------------------------------------------
 
-xcopy /y .\bin\Release\GoAtThrottleUp.dll "%kerbalplug%"
+xcopy /y .\bin\Release\GoAtThrottleUp.dll "%kerbalplug%\Plugin\"
 
 echo.
 echo --------------------------------------------
 echo         Copying Parts into folder 
 echo --------------------------------------------
-xcopy /s /y ..\Parts\* "%kerbalpart%"
+xcopy /s /y ..\Parts\* "%kerbalplug%\Parts\"
+
+echo.
+echo --------------------------------------------
+echo         Building Releases
+echo --------------------------------------------
+del /S ..\ServerRelay\*.pyc
+del .\bin\Release\GATU*.zip
+
+"%ziploc%" a -tzip .\bin\Release\GATU-ServerRelay.zip ..\ServerRelay\*
+"%ziploc%" a -tzip .\bin\Release\GATU-KSP-Plugin.zip "%kerbalplug%\..\GoAt*"
 
 timeout /t 5

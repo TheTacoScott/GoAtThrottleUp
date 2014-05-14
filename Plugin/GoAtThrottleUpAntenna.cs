@@ -4,14 +4,16 @@ using System.Collections;
 
 namespace GATU
 {
-	public class GoAtThrottleUpAntenna: PartModule
+	public class GATUAntenna: PartModule
 	{
 		[KSPField]
 		public string posthost = "127.0.0.1";
 		[KSPField]
 		public string postport = "8080";
 		[KSPField]
-		public string posturi = "post.data";
+		public string posturi = "data.post";
+		[KSPField]
+		public string cameraposturi = "image.post";
 
 		[KSPField]
 		public float high_freq = 0.1f;
@@ -26,12 +28,7 @@ namespace GATU
 		private double next_med_poll_time  = -1;
 		private double next_low_poll_time  = -1;
 
-		private string UnixTimeAsString()
-		{
-			var epochStart = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
-			var timestamp = (System.DateTime.UtcNow - epochStart).TotalSeconds;
-			return timestamp.ToString();
-		}
+
 		private IEnumerator GetAndSendHighPollData()
 		{
 			System.Collections.Generic.Dictionary<string, double> DoubleValues = new System.Collections.Generic.Dictionary<string, double>();
@@ -64,7 +61,7 @@ namespace GATU
 				DoubleValues["tar.inclination"]  = FlightGlobals.fetch.VesselTarget.GetOrbit ().inclination;
 				DoubleValues["tar.eccentricity"] = FlightGlobals.fetch.VesselTarget.GetOrbit ().eccentricity;
 				DoubleValues["tar.trueAnomaly"]  = FlightGlobals.fetch.VesselTarget.GetOrbit ().TrueAnomalyAtUT (Planetarium.GetUniversalTime ()) * (180.0 / Math.PI);
-				DoubleValues["tar.phaseAngle"]   = FindPhaseAngleOfTarget ();
+				DoubleValues["tar.phaseAngle"]   = helpers.FindPhaseAngleOfTarget (this.vessel,FlightGlobals.fetch.VesselTarget.GetName ());
 			}
 
 			//Vessel Data
@@ -108,7 +105,8 @@ namespace GATU
 			//POST DATA
 			var form = new WWWForm();
 			form.AddField("type", "high");
-			form.AddField("time", UnixTimeAsString());
+
+			form.AddField("time", helpers.UnixTimeAsString());
 			foreach (System.Collections.Generic.KeyValuePair<string, double> entry in DoubleValues)
 			{
 				form.AddField(entry.Key, entry.Value.ToString());
@@ -126,8 +124,6 @@ namespace GATU
 			yield return post;
 			if (!string.IsNullOrEmpty(post.error))
 				print("GetAndSendHighPollData: WWWFORM ERROR:" + post.error);
-			else
-				print("GetAndSendHighPollData: WWWFORM: Finished Uploading Data");
 			next_high_poll_time = Time.time + high_freq;
 
 		}
@@ -175,7 +171,7 @@ namespace GATU
 			//POST DATA
 			var form = new WWWForm();
 			form.AddField("type", "med");
-			form.AddField("time", UnixTimeAsString());
+			form.AddField("time", helpers.UnixTimeAsString());
 			foreach (System.Collections.Generic.KeyValuePair<string, double> entry in DoubleValues)
 			{
 				form.AddField(entry.Key,entry.Value.ToString());
@@ -192,8 +188,6 @@ namespace GATU
 			yield return post;
 			if (!string.IsNullOrEmpty(post.error))
 				print("GetAndSendMedPollData: WWWFORM ERROR:" + post.error);
-			else
-				print("GetAndSendMedPollData: WWWFORM: Finished Uploading Data");
 			next_med_poll_time = Time.time + med_freq;
 
 		}
@@ -204,7 +198,7 @@ namespace GATU
 			System.Collections.Generic.Dictionary<string, double> DoubleValues = new System.Collections.Generic.Dictionary<string, double>();
 			System.Collections.Generic.Dictionary<string, string> StringValues = new System.Collections.Generic.Dictionary<string, string>();
 
-			Quaternion result = updateHeadingPitchRollField(this.vessel);
+			Quaternion result = helpers.updateHeadingPitchRollField(this.vessel);
 			DoubleValues["v.heading"] = result.eulerAngles.y;
 			DoubleValues["v.pitch"] = (result.eulerAngles.x > 180) ? (360.0 - result.eulerAngles.x) : -result.eulerAngles.x;
 			DoubleValues["v.roll"] = (result.eulerAngles.z > 180)  ? (result.eulerAngles.z - 360.0) : result.eulerAngles.z;
@@ -215,7 +209,7 @@ namespace GATU
 			//POST DATA
 			var form = new WWWForm();
 			form.AddField("type", "low");
-			form.AddField("time", UnixTimeAsString());
+			form.AddField("time", helpers.UnixTimeAsString());
 			foreach (System.Collections.Generic.KeyValuePair<string, double> entry in DoubleValues)
 			{
 				form.AddField(entry.Key,entry.Value.ToString());
@@ -229,8 +223,6 @@ namespace GATU
 			yield return post;
 			if (!string.IsNullOrEmpty(post.error))
 				print("GetAndSendLowPollData: WWWFORM ERROR:" + post.error);
-			else
-				print("GetAndSendLowPollData: WWWFORM: Finished Uploading Data");
 			next_low_poll_time = Time.time + low_freq;
 		}
 
@@ -265,72 +257,7 @@ namespace GATU
 			}
 		}
 
-		//Borrowed from MechJeb2 & Telemachus
-		private Quaternion updateHeadingPitchRollField(Vessel v)
-		{
-			Vector3d CoM, north, up;
-			Quaternion rotationSurface;
 
-			CoM = v.findWorldCenterOfMass();
-			up = (CoM - v.mainBody.position).normalized;
-
-			north = Vector3d.Exclude(up, (v.mainBody.position + v.mainBody.transform.up * (float)v.mainBody.Radius) - CoM).normalized;
-
-			rotationSurface = Quaternion.LookRotation(north, up);
-			return Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(v.GetTransform().rotation) * rotationSurface);
-		}
-		private double FindPhaseAngleOfTarget()
-		{
-			                  //0       1       2        3       4       5      6       7      8        9        10     11      12       13     14      15      16
-			string[] BODIES = {"Sun","Kerbin", "Mun", "Minmus", "Moho", "Eve", "Duna", "Ike", "Jool", "Laythe", "Vall", "Bop", "Tylo", "Gilly", "Pol", "Dres", "Eeloo"};
-			CelestialBody body = FlightGlobals.Bodies[0];
-			for (int i=0;i<BODIES.Length;i++)
-			{
-				if (FlightGlobals.Bodies[i].GetName() == FlightGlobals.fetch.VesselTarget.GetName ())
-				{
-					body = FlightGlobals.Bodies[i];
-					break;
-				}
-			}
-
-
-			System.Collections.Generic.List<CelestialBody> parentBodies = new System.Collections.Generic.List<CelestialBody>();
-			CelestialBody parentBody = this.vessel.mainBody;
-			while (true)
-			{
-				if (parentBody == body)
-				{
-					return double.NaN;
-				}
-				parentBodies.Add(parentBody);
-				if (parentBody == Planetarium.fetch.Sun)
-				{
-					break;
-				}
-				else
-				{
-					parentBody = parentBody.referenceBody;
-				}
-			}
-
-			while (!parentBodies.Contains(body.referenceBody))
-			{
-				body = body.referenceBody;
-			}
-
-			Orbit orbit = this.vessel.orbit;
-			while (orbit.referenceBody != body.referenceBody)
-			{
-				orbit = orbit.referenceBody.orbit;
-			}
-
-			// Calculate the phase angle
-			double ut = Planetarium.GetUniversalTime();
-			Vector3d vesselPos = orbit.getRelativePositionAtUT(ut);
-			Vector3d bodyPos = body.orbit.getRelativePositionAtUT(ut);
-			double phaseAngle = (Math.Atan2(bodyPos.y, bodyPos.x) - Math.Atan2(vesselPos.y, vesselPos.x)) * (180.0 / Math.PI);
-			return (phaseAngle < 0) ? phaseAngle + 360 : phaseAngle;
-		}
 
 	}
 }

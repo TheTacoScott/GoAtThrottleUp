@@ -1524,16 +1524,24 @@ LARP = {
           $.get($url,function(data)
           {
             console.log("balls");
-            $($divpassive).css("background-image","url(data:image/png;base64," + data + ")");
-            $($divactive).fadeOut(100 + Math.floor((Math.random() * 100)) ,function(){
-              $($divactive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
-              $($divactive).css("background-image","url(data:image/png;base64," + data + ")");
-              $($divactive).fadeIn(10,function()
-              {
-                $($divpassive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
-                setTimeout(function() { UpdateMutliCameras($cameraid); },100 + Math.floor((Math.random() * 100)));    
+            if (data.length > 5)
+            {
+              $($divpassive).css("background-image","url(data:image/png;base64," + data + ")");
+              $($divactive).fadeOut(50 + Math.floor((Math.random() * 50)) ,function(){
+                $($divactive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
+                $($divactive).css("background-image","url(data:image/png;base64," + data + ")");
+                $($divactive).fadeIn(10,function()
+                {
+                  $($divpassive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
+                  setTimeout(function() { UpdateMutliCameras($cameraid); },50 + Math.floor((Math.random() * 50)));    
+                });
               });
-            });
+            }
+            else
+            {
+              $($divactive).css("background-image","url('/static/img/nodata.png')");
+              setTimeout(function() { UpdateMutliCameras($cameraid); },1000);    
+            }
           });
         }
 

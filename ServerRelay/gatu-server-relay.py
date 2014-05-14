@@ -79,7 +79,7 @@ def postimage():
         gatu.globals.camera_data[camid] = camimage
         gatu.globals.camera_updated[camid] = camtime
       else:
-        logging.critical(str((camid,camtime,len(camimage)),"NOT NEWER"))
+        logging.critical(str((camid,camtime,len(camimage),"NOT NEWER")))
     else:
       gatu.globals.camera_data[camid] = camimage
       gatu.globals.camera_updated[camid] = camtime

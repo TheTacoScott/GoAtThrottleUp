@@ -3,33 +3,51 @@ using System.Collections;
 
 namespace GATU
 {
-	public class GoAtThrottleUpCamera: PartModule
+	public class ScreenShotAndTime
+	{
+		public ScreenShotAndTime(byte[] data, string thetime)
+		{
+			this.dataScreenShotData = data;
+			this.dataTheTime = thetime;
+		}
+		public byte[] dataScreenShotData ;
+		public string dataTheTime;
+	}
+
+	public class GATUCamera: PartModule
 	{
 		[KSPField]
 		public string posthost = "127.0.0.1";
 		[KSPField]
 		public string postport = "8080";
 		[KSPField]
-		public string posturi = "post.image";
+		public string posturi = "data.post";
+		[KSPField]
+		public string cameraposturi = "image.post";
 
+		private bool hasParentAntenna = false;
 
 		private Camera NearCamera;
 		private Camera FarCamera;
 		private Camera SkyboxCamera;
 
-		private const int maximum = 8;
+		private const int qmax = 5;
+
+		private const int maximum = 12;
 
 		private const int maxres = 512;
-		private const int minres = 64;
+		private const int minres = 32;
 
-		private const float maxfreq = 2.5f;
-		private const float minfreq = 0.5f;
+		private const float maxfreq = 2.0f;
+		private const float minfreq = 0.0625f;
 
 		private const float fovAngle = 60f;
 		private const float aspect = 1.0f;
 
 		private double nextRenderTime = -1;
-		
+
+		System.Collections.Generic.Queue<ScreenShotAndTime> screenshotq = new System.Collections.Generic.Queue<ScreenShotAndTime>();
+
 		private Vector3 rotateConstant = new Vector3 (-90, 0, 0);
 
 
@@ -40,7 +58,7 @@ namespace GATU
 		public int camerares = 128;
 
 		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "Capture Frequency")]
-		public float freq = 1.0f;
+		public float freq = 0.5f;
 
 		[KSPField(guiActive = true, guiActiveEditor = false, guiName = "Status")]
 		public string status = "Nominal";
@@ -78,48 +96,33 @@ namespace GATU
 		[KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Change Frequency")]
 		public void FreqPlus()
 		{
-			freq += 0.5f;
+			freq = freq * 2;
 			if (freq > maxfreq) {
 				freq = minfreq;
 			}
 		}
 
 
-		private IEnumerator PostScreenshot(byte[] bytes)
+		private IEnumerator PostScreenshot(ScreenShotAndTime passedData)
 		{
-			string postlocation = "http://" + posthost + ":" + postport + "/" + posturi;
-			var epochStart = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
-			var timestamp = (System.DateTime.UtcNow - epochStart).TotalSeconds;
-			string timestampasstring = timestamp.ToString();
+			string postlocation = "http://" + posthost + ":" + postport + "/" + cameraposturi;
 
 			var form = new WWWForm();
 			form.AddField("camid", current);
-			form.AddField("camtime", timestampasstring);
-			form.AddBinaryData("camimage", bytes);
+			form.AddField("camtime", passedData.dataTheTime);
+			form.AddBinaryData("camimage", passedData.dataScreenShotData);
 			var post = new WWW(postlocation,form);
-
 			yield return post;
 			if (!string.IsNullOrEmpty(post.error))
 				print("WWWFORM ERROR:" + post.error);
-			else
-				print("WWWFORM: Finished Uploading Screenshot");
 
-			nextRenderTime = Time.time + freq;
+			//nextRenderTime = Time.time + freq;
 
 		}
 
 		public void RenderCamera()
 		{
-			if (this.vessel != FlightGlobals.ActiveVessel) { return;}
-
-			if (this.part == null || this.part.vessel != FlightGlobals.ActiveVessel ) 
-			{
-				UnityEngine.Object.Destroy(NearCamera);
-				UnityEngine.Object.Destroy(FarCamera);
-				UnityEngine.Object.Destroy(SkyboxCamera);
-				return;
-			}
-
+			print ("RenderCamera() : " + Time.time);
 			RenderTexture rt = new RenderTexture(camerares, camerares, 24);
 
 			NearCamera.targetTexture = rt;
@@ -154,15 +157,34 @@ namespace GATU
 			Destroy(rt);
 			byte[] bytes = screenShot.EncodeToPNG();
 			Destroy (screenShot);
-			StartCoroutine(PostScreenshot (bytes));
+
+			screenshotq.Enqueue (new ScreenShotAndTime (bytes, helpers.UnixTimeAsString ()));
+			nextRenderTime = Time.time + freq + Random.Range(-0.05F, 0.05F);
 
 		}
 		public override void OnUpdate()
 		{
+			if (!hasParentAntenna) {
+				return;
+			}
 
-			if (nextRenderTime > 0 && Time.time >= nextRenderTime) {
+			//if (this.vessel != FlightGlobals.ActiveVessel) { return;}
+
+			if (this.part == null) 
+			{
+				UnityEngine.Object.Destroy(NearCamera);
+				UnityEngine.Object.Destroy(FarCamera);
+				UnityEngine.Object.Destroy(SkyboxCamera);
+				return;
+			}
+
+			if (nextRenderTime > 0 && Time.time >= nextRenderTime && screenshotq.Count < qmax) 
+			{
 				nextRenderTime = -1;
 				RenderCamera ();
+			}
+			if (screenshotq.Count > 0) {
+				StartCoroutine(PostScreenshot (screenshotq.Dequeue()));
 			}
 			return;
 		}
@@ -170,14 +192,34 @@ namespace GATU
 		{
 			if (state != StartState.Editor) 
 			{
+				hasParentAntenna = this.vessel.parts.FindAll (thepart => thepart.Modules.Contains ("GATUAntenna")).Count > 0;
+				if (!hasParentAntenna) {
+					return;
+				}
+
 				nextRenderTime = Time.time + freq;
 				Camera sourceNearCam = null;
-				Camera sourceFarCam  = null;
-				Camera sourceSkyCam  = null;
+				Camera sourceFarCam = null;
+				Camera sourceSkyCam = null;
 
-				foreach (Camera cam in Camera.allCameras) {	if (cam.name == "Camera 00") {sourceNearCam = cam;break;}}
-				foreach (Camera cam in Camera.allCameras) {	if (cam.name == "Camera 01") {sourceFarCam = cam;break;}}
-				foreach (Camera cam in Camera.allCameras) {	if (cam.name == "Camera ScaledSpace") {sourceSkyCam = cam;break;}}
+				foreach (Camera cam in Camera.allCameras) {
+					if (cam.name == "Camera 00") {
+						sourceNearCam = cam;
+						break;
+					}
+				}
+				foreach (Camera cam in Camera.allCameras) {
+					if (cam.name == "Camera 01") {
+						sourceFarCam = cam;
+						break;
+					}
+				}
+				foreach (Camera cam in Camera.allCameras) {
+					if (cam.name == "Camera ScaledSpace") {
+						sourceSkyCam = cam;
+						break;
+					}
+				}
 
 				var NearCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera 00");
 				NearCamera = NearCameraGameObject.AddComponent<Camera> ();

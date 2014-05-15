@@ -31,17 +31,15 @@ namespace GATU
 		private Camera FarCamera;
 		private Camera SkyboxCamera;
 
-		private const int qmax = 10;
+		private const int qmax = 5;
 
 		private const int maximum = 12;
 
 		private const int maxres = 512;
 		private const int minres = 32;
 
-		private const int maxfps = 60;
+		private const int maxfps = 30;
 		private const int minfps = 1;
-
-		private float freq = 1.0f;
 
 		private const float fovAngle = 60f;
 		private const float aspect = 1.0f;
@@ -59,7 +57,9 @@ namespace GATU
 		public int camerares = 128;
 
 		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "FPS")]
-		public int fps = 1;
+		public int fps = 5;
+
+		private float freq = 1.0f;
 
 		[KSPField(guiActive = true, guiActiveEditor = false, guiName = "Status")]
 		public string status = "Nominal";
@@ -103,7 +103,7 @@ namespace GATU
 			if (fps > maxfps) {
 				fps = minfps;
 			}
-			freq = 1.0f / fps;
+			freq = 1.0f / (float)fps;
 		}
 
 
@@ -126,7 +126,7 @@ namespace GATU
 
 		public void RenderCamera()
 		{
-			//print ("RenderCamera() : " + Time.time);
+			print ("RenderCamera() : " + Time.time);
 			RenderTexture rt = new RenderTexture(camerares, camerares, 24);
 
 			NearCamera.targetTexture = rt;
@@ -165,7 +165,7 @@ namespace GATU
 			screenshotq.Enqueue (new ScreenShotAndTime (bytes, helpers.UnixTimeAsString ()));
 
 			nextRenderTime = Time.time + freq + Random.Range(-0.005F, 0.005F);
-
+			print ("NextRenderCamera() : " + nextRenderTime + ":" + freq + ":" + Random.Range(-0.005F, 0.005F));
 		}
 		public override void OnUpdate()
 		{
@@ -197,6 +197,7 @@ namespace GATU
 		{
 			if (state != StartState.Editor) 
 			{
+				freq = 1.0f / (float)fps;
 				hasParentAntenna = this.vessel.parts.FindAll (thepart => thepart.Modules.Contains ("GATUAntenna")).Count > 0;
 				if (!hasParentAntenna) {
 					return;

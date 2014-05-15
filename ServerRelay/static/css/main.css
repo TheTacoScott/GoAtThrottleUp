@@ -258,7 +258,7 @@ hr.status-light-hr
 }
 .camera-general-height
 {
-  height: 30vh;
+  height: 35vh;
   margin-bottom: 10px;
 }
 .camera-wrapper
@@ -309,5 +309,5 @@ hr.status-light-hr
   background-repeat: no-repeat;
   background-position: center center;
   background-image: url("/static/img/static1.gif");
-  opacity: 0.05;
+  opacity: 0.02;
 }

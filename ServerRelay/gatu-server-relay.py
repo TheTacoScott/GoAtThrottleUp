@@ -14,6 +14,10 @@ logging.basicConfig(level=logging.WARNING, format="[%(levelname)s]\t[%(asctime)s
 
 class gaturoot(object):
   @cherrypy.expose
+  def index(self):
+    raise cherrypy.HTTPRedirect("/static/lights.html")
+
+  @cherrypy.expose
   def getapi(self, arg):
     return_data = {}
     if (arg == "low"):

@@ -31,15 +31,17 @@ namespace GATU
 		private Camera FarCamera;
 		private Camera SkyboxCamera;
 
-		private const int qmax = 5;
+		private const int qmax = 10;
 
 		private const int maximum = 12;
 
 		private const int maxres = 512;
 		private const int minres = 32;
 
-		private const float maxfreq = 2.0f;
-		private const float minfreq = 0.0625f;
+		private const int maxfps = 60;
+		private const int minfps = 1;
+
+		private float freq = 1.0f;
 
 		private const float fovAngle = 60f;
 		private const float aspect = 1.0f;
@@ -50,15 +52,14 @@ namespace GATU
 
 		private Vector3 rotateConstant = new Vector3 (-90, 0, 0);
 
-
 		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "ID")]
 		public int current = 1;
 
 		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "Resolution")]
 		public int camerares = 128;
 
-		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "Capture Frequency")]
-		public float freq = 0.5f;
+		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "FPS")]
+		public int fps = 1;
 
 		[KSPField(guiActive = true, guiActiveEditor = false, guiName = "Status")]
 		public string status = "Nominal";
@@ -93,13 +94,16 @@ namespace GATU
 			}
 		}
 			
-		[KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Change Frequency")]
+		[KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Change FPS")]
 		public void FreqPlus()
 		{
-			freq = freq * 2;
-			if (freq > maxfreq) {
-				freq = minfreq;
+			int multi = 1;
+			if (fps >= 5 && fps <= maxfps) { multi = 5; }
+			fps = fps + multi;
+			if (fps > maxfps) {
+				fps = minfps;
 			}
+			freq = 1.0f / fps;
 		}
 
 
@@ -122,7 +126,7 @@ namespace GATU
 
 		public void RenderCamera()
 		{
-			print ("RenderCamera() : " + Time.time);
+			//print ("RenderCamera() : " + Time.time);
 			RenderTexture rt = new RenderTexture(camerares, camerares, 24);
 
 			NearCamera.targetTexture = rt;
@@ -159,7 +163,8 @@ namespace GATU
 			Destroy (screenShot);
 
 			screenshotq.Enqueue (new ScreenShotAndTime (bytes, helpers.UnixTimeAsString ()));
-			nextRenderTime = Time.time + freq + Random.Range(-0.05F, 0.05F);
+
+			nextRenderTime = Time.time + freq + Random.Range(-0.005F, 0.005F);
 
 		}
 		public override void OnUpdate()

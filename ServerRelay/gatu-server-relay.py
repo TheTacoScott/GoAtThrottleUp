@@ -24,9 +24,50 @@ class gaturoot(object):
       with gatu.globals.high_data_lock: return_data = gatu.globals.high_data
     
     return json.dumps(return_data)
+  
+  @cherrypy.expose
+  def getimage(self, camid):
+    return_data = ""
+    camid = int(camid)
+    if camid==1:  return_data = gatu.globals.camera01.getdata()
+    if camid==2:  return_data = gatu.globals.camera02.getdata()
+    if camid==3:  return_data = gatu.globals.camera03.getdata()
+    if camid==4:  return_data = gatu.globals.camera04.getdata()
+    if camid==5:  return_data = gatu.globals.camera05.getdata()
+    if camid==6:  return_data = gatu.globals.camera06.getdata()
+    if camid==7:  return_data = gatu.globals.camera07.getdata()
+    if camid==8:  return_data = gatu.globals.camera08.getdata()
+    if camid==9:  return_data = gatu.globals.camera09.getdata()
+    if camid==10: return_data = gatu.globals.camera10.getdata()
+    if camid==11: return_data = gatu.globals.camera11.getdata()
+    if camid==12: return_data = gatu.globals.camera12.getdata()  
+    
+    return base64.b64encode(return_data)
+    
   @cherrypy.expose
   def setimage(self, **kwargs):
-    pass
+    return_data = {}
+    if not "camtime" in kwargs: return json.dumps(return_data)
+    if not "camid" in kwargs: return json.dumps(return_data)
+    if not "camimage" in kwargs: return json.dumps(return_data)
+    camid    = int(kwargs["camid"])
+    camtime  = float(kwargs["camtime"])
+    logging.critical(str((camid,camtime)))
+    camimage = kwargs["camimage"].fullvalue()
+    logging.critical(str(("IMAGE DATA:",len(camimage))))
+    if camid==1:  gatu.globals.camera01.setdata(camimage)
+    if camid==2:  gatu.globals.camera02.setdata(camimage)
+    if camid==3:  gatu.globals.camera03.setdata(camimage)
+    if camid==4:  gatu.globals.camera04.setdata(camimage)
+    if camid==5:  gatu.globals.camera05.setdata(camimage)
+    if camid==6:  gatu.globals.camera06.setdata(camimage)
+    if camid==7:  gatu.globals.camera07.setdata(camimage)
+    if camid==8:  gatu.globals.camera08.setdata(camimage)
+    if camid==9:  gatu.globals.camera09.setdata(camimage)
+    if camid==10: gatu.globals.camera10.setdata(camimage)
+    if camid==11: gatu.globals.camera11.setdata(camimage)
+    if camid==12: gatu.globals.camera12.setdata(camimage)    
+    
   @cherrypy.expose
   def setapi(self, **kwargs):
     return_data = {}
@@ -74,6 +115,6 @@ class gaturoot(object):
    
 if __name__ == '__main__':
   current_dir = os.path.dirname(os.path.abspath(__file__))
-  cherrypy.config.update({'server.socket_host': '0.0.0.0','server.socket_port': gatu.globals.webport,'log.screen': False,'server.thread_pool': 35})
+  cherrypy.config.update({'server.socket_host': '0.0.0.0','server.socket_port': gatu.globals.webport,'log.screen': False,'server.thread_pool': 30,'server.socket_queue_size': 200,"server.thread_pool_max": -1})
   conf = {'/static': {'tools.staticdir.on': True,'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
   cherrypy.quickstart(gaturoot(), '/', config=conf)

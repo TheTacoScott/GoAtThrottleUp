@@ -1517,7 +1517,7 @@ LARP = {
         //console.log("UpdateMutliCameras:" + $cameraid);
         var $divactive  = "#camera"+$cameraid+"-active";
         var $divpassive = "#camera"+$cameraid+"-passive";
-        var $url = "/imageb64.get/" + $cameraid + "?" + Math.random();
+        var $url = "/getimage/" + $cameraid;
         
         if ($($divactive).length > 0)
         {         

@@ -1523,25 +1523,17 @@ LARP = {
         {         
           $.get($url,function(data)
           {
-            console.log("balls");
             if (data.length > 5)
             {
-              $($divpassive).css("background-image","url(data:image/png;base64," + data + ")");
-              $($divactive).fadeOut(50 + Math.floor((Math.random() * 25)) ,function(){
-                $($divactive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
-                $($divactive).css("background-image","url(data:image/png;base64," + data + ")");
-                $($divactive).fadeIn(0,function()
-                {
-                  $($divpassive).css("background-image","url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=')");
-                  setTimeout(function() { UpdateMutliCameras($cameraid); },50 + Math.floor((Math.random() * 25)));    
-                });
-              });
+              $($divactive).css("background-image","url(data:image/png;base64," + data + ")");
+              setTimeout(function() { UpdateMutliCameras($cameraid); },25 + Math.floor((Math.random() * 10)));
             }
             else
             {
               $($divactive).css("background-image","url('/static/img/nodata.png')");
-              setTimeout(function() { UpdateMutliCameras($cameraid); },1000);    
+              setTimeout(function() { UpdateMutliCameras($cameraid); },1000);  
             }
+            
           });
         }
 

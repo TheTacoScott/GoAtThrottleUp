@@ -119,6 +119,6 @@ class gaturoot(object):
    
 if __name__ == '__main__':
   current_dir = os.path.dirname(os.path.abspath(__file__))
-  cherrypy.config.update({"environment": "embedded",'server.socket_host': '0.0.0.0','server.socket_port': gatu.globals.webport,'server.thread_pool': 50,'server.socket_queue_size': 5,"server.thread_pool_max": -1})
+  cherrypy.config.update({"environment": "embedded",'server.socket_host': '0.0.0.0','server.socket_port': gatu.globals.webport,'server.thread_pool': 30,'server.socket_queue_size': 200,"server.thread_pool_max": -1})
   conf = {'/static': {'tools.staticdir.on': True,'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
   cherrypy.quickstart(gaturoot(), '/', config=conf)

@@ -1526,12 +1526,12 @@ LARP = {
           {
 
             var dataz = $.parseJSON(data);
-            if ($($divactive).data("hash") != dataz["hash"] || !$($divactive).attr("data-hash")) 
+            if ($($divactive).data("hash") != dataz["hash"]) 
             { 
               $($divactive).data("hash",dataz["hash"]); 
               if (dataz["image"] != "")
               {
-                //$($divpassive).attr("src",$($divactive).attr("src"));
+                $($divactive).data("lastupdate",new Date().getTime());
                 $($divactive).attr("src","data:image/png;base64," + dataz["image"]);
                 $($divpassive).attr("src","data:image/png;base64," + dataz["image"]); 
                 setTimeout(function() { UpdateMutliCameras($cameraid); },15 + Math.floor((Math.random() * 15)));               
@@ -1544,15 +1544,14 @@ LARP = {
             }
             else
             {
-              if (dataz["image"] != "")
+              if (new Date().getTime() - $($divactive).data("lastupdate") > 5000)
               {
-                setTimeout(function() { UpdateMutliCameras($cameraid); },15 + Math.floor((Math.random() * 15))); 
+                $($divactive).attr("src","/static/img/nodata.png");
+                setTimeout(function() { UpdateMutliCameras($cameraid); },1000); 
               }
               else
               {
-
-                 $($divactive).attr("src","/static/img/nodata.png");
-                setTimeout(function() { UpdateMutliCameras($cameraid); },1000); 
+                setTimeout(function() { UpdateMutliCameras($cameraid); },25 + Math.floor((Math.random() * 15))); 
               }
             }
           });

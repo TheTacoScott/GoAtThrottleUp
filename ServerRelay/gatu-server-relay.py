@@ -30,7 +30,8 @@ class gaturoot(object):
       with gatu.globals.high_data_lock: return_data = gatu.globals.high_data
     
   
-    # return json.dumps(return_data)
+    return json.dumps(return_data)
+    
   @cherrypy.expose
   def getimage(self, camid):
     return_data = ""

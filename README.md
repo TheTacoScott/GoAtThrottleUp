@@ -10,5 +10,6 @@ All of the required data to get a kerbalnaut LARP pilot to the Mun and back is p
 
 Shout outs to Telemachus and RasterPropMonitor.
 
-Go At Throttle Up uses jQWidgets @ http://www.jqwidgets.com/license/
+Go At Throttle Up uses jQWidgets @ http://www.jqwidgets.com/
+
 jQWidgets is not free for commercial use. For more information check out: http://www.jqwidgets.com/license/

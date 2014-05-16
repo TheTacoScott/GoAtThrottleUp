@@ -3,7 +3,7 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="GoAtThrottleUpCamera.cs">
     <Files>
       <File FileName="GoAtThrottleUpAntenna.cs" Line="1" Column="1" />
-      <File FileName="GoAtThrottleUpCamera.cs" Line="22" Column="35" />
+      <File FileName="GoAtThrottleUpCamera.cs" Line="211" Column="30" />
       <File FileName="helpers.cs" Line="1" Column="1" />
       <File FileName="post-build.bat" Line="1" Column="1" />
     </Files>

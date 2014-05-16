@@ -38,13 +38,15 @@ namespace GATU
 		private const int maxres = 512;
 		private const int minres = 32;
 
-		private const int maxfps = 30;
+		private const int maxfps = 20;
 		private const int minfps = 1;
 
 		private const float fovAngle = 60f;
 		private const float aspect = 1.0f;
 
 		private double nextRenderTime = -1;
+
+		private int maxPendingPosts = 50;
 
 		System.Collections.Generic.Queue<ScreenShotAndTime> screenshotq = new System.Collections.Generic.Queue<ScreenShotAndTime>();
 
@@ -58,6 +60,12 @@ namespace GATU
 
 		[KSPField(isPersistant = true,guiActive = true, guiActiveEditor = true, guiName = "FPS")]
 		public int fps = 5;
+
+		[KSPField(isPersistant = false,guiActive = true, guiActiveEditor = false, guiName = "Pending Frames")]
+		public int PendingPosts = 0;
+
+		[KSPField(isPersistant = false,guiActive = true, guiActiveEditor = false, guiName = "Rate Limit")]
+		public float RateLimit = 0.0f;
 
 		private float freq = 1.0f;
 
@@ -116,17 +124,17 @@ namespace GATU
 			form.AddField("camtime", passedData.dataTheTime);
 			form.AddBinaryData("camimage", passedData.dataScreenShotData);
 			var post = new WWW(postlocation,form);
+
 			yield return post;
 			if (!string.IsNullOrEmpty(post.error))
 				print("WWWFORM ERROR:" + post.error);
-
-			//nextRenderTime = Time.time + freq;
+			PendingPosts--;
 
 		}
 
 		public void RenderCamera()
 		{
-			print ("RenderCamera() : " + Time.time);
+			//print ("RenderCamera() : " + Time.time);
 			RenderTexture rt = new RenderTexture(camerares, camerares, 24);
 
 			NearCamera.targetTexture = rt;
@@ -165,7 +173,7 @@ namespace GATU
 			screenshotq.Enqueue (new ScreenShotAndTime (bytes, helpers.UnixTimeAsString ()));
 
 			nextRenderTime = Time.time + freq + Random.Range(-0.005F, 0.005F);
-			print ("NextRenderCamera() : " + nextRenderTime + ":" + freq + ":" + Random.Range(-0.005F, 0.005F));
+			//print ("NextRenderCamera() : " + nextRenderTime + ":" + freq + ":" + Random.Range(-0.005F, 0.005F));
 		}
 		public override void OnUpdate()
 		{
@@ -173,7 +181,7 @@ namespace GATU
 				return;
 			}
 
-			//if (this.vessel != FlightGlobals.ActiveVessel) { return;}
+			//if (this.vessel != FlightG50lobals.ActiveVessel) { return;}
 
 			if (this.part == null) 
 			{
@@ -183,12 +191,15 @@ namespace GATU
 				return;
 			}
 
-			if (nextRenderTime > 0 && Time.time >= nextRenderTime && screenshotq.Count < qmax) 
+			if (nextRenderTime > 0 && Time.time >= nextRenderTime && screenshotq.Count < qmax && PendingPosts < maxPendingPosts) 
 			{
 				nextRenderTime = -1;
+				RateLimit = (float)PendingPosts / (float)maxPendingPosts;
+				freq = (1.0f / (float)fps) * (1.0f+RateLimit);
 				RenderCamera ();
 			}
 			if (screenshotq.Count > 0) {
+				PendingPosts++;
 				StartCoroutine(PostScreenshot (screenshotq.Dequeue()));
 			}
 			return;
@@ -198,6 +209,7 @@ namespace GATU
 			if (state != StartState.Editor) 
 			{
 				freq = 1.0f / (float)fps;
+
 				hasParentAntenna = this.vessel.parts.FindAll (thepart => thepart.Modules.Contains ("GATUAntenna")).Count > 0;
 				if (!hasParentAntenna) {
 					return;

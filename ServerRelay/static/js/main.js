@@ -1516,24 +1516,45 @@ LARP = {
       {
         //console.log("UpdateMutliCameras:" + $cameraid);
         var $divactive  = "#camera"+$cameraid+"-active";
-        var $divpassive = "#camera"+$cameraid+"-passive";
+        var $divpassive  = "#camera"+$cameraid+"-passive";
+        
         var $url = "/getimage/" + $cameraid;
         
         if ($($divactive).length > 0)
         {         
           $.get($url,function(data)
           {
-            if (data.length > 5)
-            {
-              $($divactive).css("background-image","url(data:image/png;base64," + data + ")");
-              setTimeout(function() { UpdateMutliCameras($cameraid); },25 + Math.floor((Math.random() * 10)));
+
+            var dataz = $.parseJSON(data);
+            if ($($divactive).data("hash") != dataz["hash"] || !$($divactive).attr("data-hash")) 
+            { 
+              $($divactive).data("hash",dataz["hash"]); 
+              if (dataz["image"] != "")
+              {
+                //$($divpassive).attr("src",$($divactive).attr("src"));
+                $($divactive).attr("src","data:image/png;base64," + dataz["image"]);
+                $($divpassive).attr("src","data:image/png;base64," + dataz["image"]); 
+                setTimeout(function() { UpdateMutliCameras($cameraid); },15 + Math.floor((Math.random() * 15)));               
+              }
+              else
+              {
+                $($divactive).attr("src","/static/img/nodata.png");
+                setTimeout(function() { UpdateMutliCameras($cameraid); },1000);  
+              }
             }
             else
             {
-              $($divactive).css("background-image","url('/static/img/nodata.png')");
-              setTimeout(function() { UpdateMutliCameras($cameraid); },1000);  
+              if (dataz["image"] != "")
+              {
+                setTimeout(function() { UpdateMutliCameras($cameraid); },15 + Math.floor((Math.random() * 15))); 
+              }
+              else
+              {
+
+                 $($divactive).attr("src","/static/img/nodata.png");
+                setTimeout(function() { UpdateMutliCameras($cameraid); },1000); 
+              }
             }
-            
           });
         }
 

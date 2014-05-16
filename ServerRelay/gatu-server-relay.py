@@ -7,6 +7,8 @@ import time
 import os
 import random
 import base64
+import hashlib
+
 
 gatu.globals.webport = 8080
 
@@ -27,8 +29,8 @@ class gaturoot(object):
     elif (arg == "high"):
       with gatu.globals.high_data_lock: return_data = gatu.globals.high_data
     
-    return json.dumps(return_data)
   
+    # return json.dumps(return_data)
   @cherrypy.expose
   def getimage(self, camid):
     return_data = ""
@@ -46,7 +48,7 @@ class gaturoot(object):
     if camid==11: return_data = gatu.globals.camera11.getdata()
     if camid==12: return_data = gatu.globals.camera12.getdata()  
     
-    return base64.b64encode(return_data)
+    return json.dumps({"hash":hashlib.md5(return_data).hexdigest(),"image":base64.b64encode(return_data)})
     
   @cherrypy.expose
   def setimage(self, **kwargs):

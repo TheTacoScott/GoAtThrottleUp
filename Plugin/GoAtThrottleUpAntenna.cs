@@ -131,12 +131,36 @@ namespace GATU
 		{
 			//Orbit data
 			System.Collections.Generic.Dictionary<string, double> DoubleValues = new System.Collections.Generic.Dictionary<string, double>();
-			DoubleValues["o.ApA"] = this.vessel.orbit.ApA;
-			DoubleValues["o.PeA"] = this.vessel.orbit.PeA;
-			DoubleValues["o.timeToAp"] = this.vessel.orbit.timeToAp;
-			DoubleValues["o.timeToPe"] = this.vessel.orbit.timeToPe;
-			DoubleValues["o.inclination"] = this.vessel.orbit.inclination;
-			DoubleValues["o.eccentricity"] = this.vessel.orbit.eccentricity;
+			System.Collections.Generic.Dictionary<string, string> StringValues = new System.Collections.Generic.Dictionary<string, string>();
+
+			StringValues ["o.body"] = this.vessel.orbit.referenceBody.GetName ();
+			DoubleValues ["o.ApA"] = this.vessel.orbit.ApA;
+			DoubleValues ["o.PeA"] = this.vessel.orbit.PeA;
+			DoubleValues ["o.timeToAp"] = this.vessel.orbit.timeToAp;
+			DoubleValues ["o.timeToPe"] = this.vessel.orbit.timeToPe;
+			DoubleValues ["o.inclination"] = this.vessel.orbit.inclination;
+			DoubleValues ["o.eccentricity"] = this.vessel.orbit.eccentricity;
+
+			StringValues ["o.n.body"] = "No Orbit";
+			DoubleValues ["o.n.ApA"] = double.NaN;
+			DoubleValues ["o.n.PeA"] = double.NaN;
+			DoubleValues ["o.n.timeToAp"] = double.NaN;
+			DoubleValues ["o.n.timeToPe"] = double.NaN;
+			DoubleValues ["o.n.inclination"] = double.NaN;
+			DoubleValues ["o.n.eccentricity"] = double.NaN;
+
+			if (this.vessel.orbit.nextPatch != null && this.vessel.orbit.nextPatch.activePatch == true) {
+				StringValues ["o.n.body"] = this.vessel.orbit.nextPatch.referenceBody.GetName ();
+				DoubleValues ["o.n.ApA"] = this.vessel.orbit.nextPatch.ApA;
+				DoubleValues ["o.n.PeA"] = this.vessel.orbit.nextPatch.PeA;
+				DoubleValues ["o.n.timeToAp"] = this.vessel.orbit.nextPatch.timeToAp;
+				DoubleValues ["o.n.timeToPe"] = this.vessel.orbit.nextPatch.timeToPe;
+				DoubleValues ["o.n.inclination"] = this.vessel.orbit.nextPatch.inclination;
+				DoubleValues ["o.n.eccentricity"] = this.vessel.orbit.nextPatch.eccentricity;
+			}
+
+
+
 			//Resource data
 			System.Collections.Generic.Dictionary<string, double> ResourceCurrent = new System.Collections.Generic.Dictionary<string, double>();
 			System.Collections.Generic.Dictionary<string, double> ResourceMax = new System.Collections.Generic.Dictionary<string, double>();
@@ -175,6 +199,10 @@ namespace GATU
 			foreach (System.Collections.Generic.KeyValuePair<string, double> entry in DoubleValues)
 			{
 				form.AddField(entry.Key,entry.Value.ToString());
+			}
+			foreach (System.Collections.Generic.KeyValuePair<string, string> entry in StringValues)
+			{
+				form.AddField(entry.Key,entry.Value);
 			}
 			foreach (System.Collections.Generic.KeyValuePair<string, double> entry in ResourceCurrent)
 			{

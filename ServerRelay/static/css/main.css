@@ -258,7 +258,7 @@ hr.status-light-hr
 }
 .camera-general-height
 {
-  height: 35vh;
+  min-height: 10vh;
   margin-bottom: 10px;
 }
 .camera-wrapper

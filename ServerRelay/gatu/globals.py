@@ -43,5 +43,5 @@ high_data_lock = threading.Lock()
 high_data = {}
 high_data_updated = -1
 
-stringTypes = ["tar.name","body.name","v.body","v.encounter.body","o.n.body","o.body"]
+stringTypes = ["tar.name","body.name","v.body","v.encounter.body","o.n.body","o.body","o.n.type","o.type"]
 boolTypes = ["p.paused","v.rcsValue","v.sasValue","v.lightValue","v.brakeValue","v.gearValue"]    

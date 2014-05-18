@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>GoAtThrottleUp - Takeoff</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+
+      <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+	  <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+      <link rel="stylesheet" href="css/main.css">
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+      
+      <script src="js/jquery-2.1.0.min.js"></script>
+	  <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+      <script type="text/javascript" src="jqwidgets/jqxchart.js"></script>
+	  <script type="text/javascript" src="jqwidgets/jqxgauge.js"></script>
+	  <link rel="stylesheet" href="jqwidgets/styles/jqx.darkblue.css" type="text/css" />
+      
+      <script src="js/bootstrap.min.js"></script>
+	  
+      <script src="js/main.js"></script>
+      
+  </head>
+<body>
+  <div class="container-fluid">
+    <div class="row header-row">
+      <div class="col-md-8"><h1><span class="glyphicon glyphicon-upload"></span> Takeoff</h1><div id="linksbar"></div></div>	  
+      <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-time"></span> Mission Time</h3>
+        <table class="table table-condensed">
+        <tbody>
+        <tr><td><span class="readout-label">Mission:</span></td><td class="text-right"><span class="mission-time-readout">alt</span></td></tr>
+        <tr><td><span class="readout-label">Universal:</span></td><td class="text-right"><span class="u-time-readout">alt</span></td></tr>
+        </tbody>
+        </table> 
+      </div>
+    </div> <!-- end row -->
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <h3>Heading</h3>
+        <center><div id="gauge-heading"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="heading-readout">alt</span>&deg;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-4 text-center">
+        <h3>Pitch</h3>
+        <center><div id="gauge-pitch"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="pitch-readout">alt</span>&deg;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-4 text-center">
+        <h3>Roll</h3>
+        <center><div id="gauge-roll"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="roll-readout">alt</span>&deg;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- end row -->
+    <div class="row">      
+    
+      <div class="col-md-4 text-center"><!-- start gauge -->
+        <h3>Atmospheric Density</h3>
+        <center><div id="gauge-atmo"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="atmo-density-readout">alt</span> atm</td></tr>
+          </tbody>
+        </table>
+      </div><!-- end gauge -->
+      <div class="col-md-4 text-center"><!-- start gauge -->
+        <h3>Throttle</h3>
+        <center><div id="throttle-gauge"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="throttle-readout">alt</span>%</td></tr>
+          </tbody>
+        </table>
+      </div><!-- end gauge -->
+      <div class="col-md-4 text-center"><!-- start gauge -->
+        <h3>Dynamic Pressure</h3>
+        <center><div id="gauge-dynop"></div></center>
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="text-left"><span class="readout-label">Current:</span></td><td class="text-right"><span class="dyno-pressure-readout">alt</span></td></tr>
+          </tbody>
+        </table>
+      </div><!-- end gauge -->
+      
+    </div><!-- end row -->
+  
+  </div><!-- end container -->
+</body>
+</html>
+        
+        
+      

@@ -35,8 +35,8 @@ namespace GATU
 
 		private const int maximum = 12;
 
-		private const int maxres = 512;
-		private const int minres = 32;
+		private const int maxres = 256;
+		private const int minres = 64;
 
 		private const int maxfps = 20;
 		private const int minfps = 1;

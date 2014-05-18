@@ -140,6 +140,14 @@ namespace GATU
 			DoubleValues ["o.timeToPe"] = this.vessel.orbit.timeToPe;
 			DoubleValues ["o.inclination"] = this.vessel.orbit.inclination;
 			DoubleValues ["o.eccentricity"] = this.vessel.orbit.eccentricity;
+			StringValues ["o.type"] = "Regular Orbit";
+			if (this.vessel.orbit.patchEndTransition == Orbit.PatchTransitionType.ENCOUNTER) {
+				StringValues ["o.type"] = "Encounter";
+			}
+			if (this.vessel.orbit.patchEndTransition == Orbit.PatchTransitionType.ESCAPE) {
+				StringValues ["o.type"] = "Escape";
+			}
+
 
 			StringValues ["o.n.body"] = "No Orbit";
 			DoubleValues ["o.n.ApA"] = double.NaN;
@@ -148,6 +156,8 @@ namespace GATU
 			DoubleValues ["o.n.timeToPe"] = double.NaN;
 			DoubleValues ["o.n.inclination"] = double.NaN;
 			DoubleValues ["o.n.eccentricity"] = double.NaN;
+			StringValues ["o.n.type"] = "Regular Orbit";
+			DoubleValues ["o.n.escape"] = double.NaN;
 
 			if (this.vessel.orbit.nextPatch != null && this.vessel.orbit.nextPatch.activePatch == true) {
 				StringValues ["o.n.body"] = this.vessel.orbit.nextPatch.referenceBody.GetName ();
@@ -157,6 +167,12 @@ namespace GATU
 				DoubleValues ["o.n.timeToPe"] = this.vessel.orbit.nextPatch.timeToPe;
 				DoubleValues ["o.n.inclination"] = this.vessel.orbit.nextPatch.inclination;
 				DoubleValues ["o.n.eccentricity"] = this.vessel.orbit.nextPatch.eccentricity;
+				if (this.vessel.orbit.nextPatch.patchEndTransition == Orbit.PatchTransitionType.ENCOUNTER) {
+					StringValues ["o.n.type"] = "Encounter";
+				}
+				if (this.vessel.orbit.nextPatch.patchEndTransition == Orbit.PatchTransitionType.ESCAPE) {
+					StringValues ["o.n.type"] = "Escape";
+				}
 			}
 
 

@@ -38,11 +38,6 @@ var $globaldata = {};
 var $globaldata_updated = {};
 var $animatespeed = 100;
 
-var $imglow  = "/image.get/1";
-var $imgmed  = "/image.get/2";
-var $imghigh = "/image.get/3";
-
-
 function missionTimeString(t) 
 {
     var result;
@@ -127,7 +122,11 @@ $(document).ready(function() {
   LARP.startUp();
   KSPMAP.startUp();
   $(".status-light").popover();
-  $("#linksbar").html('( <a href="landing.html">Landing</a> | <a href="levels.html">Levels</a> | <a href="orbit.html">Encounter</a> | <a href="flight.html">Guidance</a> | <a href="lights.html">Lights</a> | <a href="big.html">Big Screen</a> | <a href="cameras.html">Cameras</a> )');
+  var $linkdata = '( <a href="ascent.html">Takeoff</a> | <a href="landing.html">Landing</a> | <a href="orbit.html">Encounter</a> |';
+  $linkdata += ' Escape | <a href="levels.html">Levels</a> | <a href="lights.html">Lights</a> | ';
+  $linkdata += ' <a href="big.html">Big Screen</a> | <a href="cameras.html">Cameras</a> )';
+  
+  $("#linksbar").html($linkdata);
 });
 
 var BODIES = ["Kerbol", "Kerbin", "Mun", "Minmus", "Moho", "Eve", "Duna", "Ike", "Jool", "Laythe", "Vall", "Bop", "Tylo", "Gilly", "Pol", "Dres", "Eeloo"];
@@ -178,36 +177,6 @@ function UpdateLowVelocityGauge(id,value)
 }
 KSPMAP = {
   startUp: function() {
-    
-    function updatebigimgs()
-    {
-      if ($("#full-landing-map-bm").length > 0 && $("#full-landing-map-bl").length > 0 && $("#full-landing-map-br").length > 0)
-      {
-        var $imgurl1 = $imglow +"?"+ new Date().getTime();
-        var d1 = $("#bmhelper").attr("src",$imgurl1).load(function(){
-          $("#full-landing-map-bm").css("background","url("+$imgurl1+ ")").css("background-size","cover");
-        });
-        
-        var $imgurl2 = $imghigh +"?"+ new Date().getTime();
-        var d2 = $("#blhelper").attr("src",$imgurl2).load(function(){
-          $("#full-landing-map-bl").css("background","url("+$imgurl2+ ")").css("background-size","cover");
-        });
-
-        var $imgurl3 = $imgmed +"?"+ new Date().getTime();
-        var d3 = $("#brhelper").attr("src",$imgurl3).load(function(){
-          $("#full-landing-map-br").css("background","url("+$imgurl3+ ")").css("background-size","cover");
-        });
-        $.when(d1, d2,d3).done(function() {
-          setTimeout(updatebigimgs,450);
-        });
-      }
-    }
-    updatebigimgs();
-
-    
-    
-    
-    
     
   
     if ($("#landing-map").length > 0) {
@@ -305,6 +274,10 @@ GAUGES = {
   rangesAtmo: [
                   { startValue: 0.01, endValue: 0.12, style: { fill: '#d02841', stroke: '#d02841' }, startDistance: '5%', endDistance: '5%', endWidth: 13, startWidth: 13 },
                   { startValue: 0.14, endValue: 0.29, style: { fill: '#0094FF', stroke: '#0094FF' }, startDistance: '5%', endDistance: '5%', endWidth: 13, startWidth: 13 }
+                  
+              ],
+  rangesDynop: [
+                  { startValue: 0.0, endValue: 40000.0, style: { fill: '#2841d0', stroke: '#2841d0' }, startDistance: '5%', endDistance: '5%', endWidth: 3, startWidth: 3 }
                   
               ],
   
@@ -770,6 +743,30 @@ GAUGES = {
         endAngle: 90+360
       });
     }
+    
+    if ($("#gauge-dynop").length > 0) { 
+      $('#gauge-dynop').jqxGauge(
+      {
+        min: 0.0,
+        max: 40000.0,
+        width: this.standardWidth,
+        height: this.standardHeight,
+        ranges: this.rangesDynop,
+        pointer: { pointerType: 'default', style: { fill: '#000', stroke: '#000' }, length: '90%', width: '3%', visible: true },
+        cap: { radius: 0.04 },
+        value: 0,
+        style: { stroke: '#ffffff', 'stroke-width': '1px', fill: '#ffffff' },
+        animationDuration: $animatespeed,
+        colorScheme: 'scheme08',
+        labels: { visible: true, position: 'inside',interval:10000 },
+        ticksMinor: { interval: 1000, size: '2%' },
+        ticksMajor: { interval: 5000, size: '5%' },
+        border: { size: '0%', style: { stroke: '#898989'}, visible: false },
+        startAngle: 90,
+        endAngle: 90+315
+      });
+    }
+    
     if ($("#gauge-atmo").length > 0) { 
       $('#gauge-atmo').jqxGauge(
       {
@@ -943,6 +940,10 @@ function RenderData()
 		$(".atmo-density-readout").text($globaldata['v.atmosphericDensity'].toFixed(4));
 		$('#gauge-atmo').val($globaldata['v.atmosphericDensity']);
 	}
+  if ('v.dynamicPressure' in $globaldata) {
+    $(".dyno-pressure-readout").text($globaldata['v.dynamicPressure'].toFixed(4));
+    $('#gauge-dynop').val($globaldata['v.dynamicPressure']);
+  }
    
 	//landing
 	if ('v.surfaceSpeed' in $globaldata && 'v.verticalSpeed' in $globaldata)
@@ -985,6 +986,16 @@ function RenderData()
 		$(".o-apa-time-readout").text(dayhourMinSec($globaldata['o.timeToAp']));
 		$(".o-per-time-readout").text(dayhourMinSec($globaldata['o.timeToPe']));
 	}
+  if ('o.n.body' in $globaldata)
+  {
+    $(".n-orbiting-type-readout").text($globaldata['o.n.type']);
+    $(".n-orbiting-body-readout").text($globaldata['o.n.body']);
+    $(".orbiting-type-readout").text($globaldata['o.type']);
+    $(".n-o-apa-readout").text($globaldata['o.n.ApA'].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    $(".n-o-per-readout").text($globaldata['o.n.PeA'].toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    $(".n-o-apa-time-readout").text(dayhourMinSec($globaldata['o.n.timeToAp']));
+    $(".n-o-per-time-readout").text(dayhourMinSec($globaldata['o.n.timeToPe']));    
+  }
 	
 	//encounter
 	if ('v.body' in $globaldata) { $(".orbiting-body-readout").text($globaldata['v.body']); }

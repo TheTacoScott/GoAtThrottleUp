@@ -45,6 +45,7 @@
     <Compile Include="GoAtThrottleUpCamera.cs" />
     <Compile Include="GoAtThrottleUpAntenna.cs" />
     <Compile Include="helpers.cs" />
+    <Compile Include="VesselView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -267,6 +267,7 @@ return "ERROR";
 
 		public static float MAX_ALTITUDE = 250;
 	}
+
 	public class VesselViewer
 	{
 

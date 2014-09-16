@@ -6,7 +6,7 @@
       <File FileName="GoAtThrottleUpCamera.cs" Line="1" Column="1" />
       <File FileName="helpers.cs" Line="1" Column="1" />
       <File FileName="post-build.bat" Line="1" Column="1" />
-      <File FileName="VesselView.cs" Line="16" Column="3" />
+      <File FileName="VesselView.cs" Line="15" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

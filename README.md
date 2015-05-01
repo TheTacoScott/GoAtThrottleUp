@@ -13,3 +13,5 @@ Shout outs to Telemachus and RasterPropMonitor.
 Go At Throttle Up uses jQWidgets @ http://www.jqwidgets.com/
 
 jQWidgets is not free for commercial use. For more information check out: http://www.jqwidgets.com/license/
+
+cat /tmp/myfifo | avconv -ar 48000 -ac 2 -f s16le -i /dev/zero -re -f image2pipe -c:v mjpeg -i - -s 640x480 -pix_fmt yuv420p -preset veryfast -c:a aac -r 15 -f flv -strict experimental

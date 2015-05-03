@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 namespace GATU
 {
 	public class ScreenShotAndTime
@@ -16,6 +17,7 @@ namespace GATU
 
 	public class GATUCamera: PartModule
 	{
+		
 		[KSPField]
 		public string posthost = "127.0.0.1";
 		[KSPField]
@@ -30,6 +32,8 @@ namespace GATU
 		private Camera NearCamera;
 		private Camera FarCamera;
 		private Camera SkyboxCamera;
+		private Camera GalaxyCamera;
+
 
 		private const int qmax = 5;
 
@@ -151,6 +155,11 @@ namespace GATU
 			SkyboxCamera.transform.rotation = this.part.gameObject.transform.rotation;
 			SkyboxCamera.transform.Rotate(rotateConstant);
 
+			GalaxyCamera.targetTexture = rt;
+			GalaxyCamera.transform.rotation = this.part.gameObject.transform.rotation;
+			GalaxyCamera.transform.Rotate(rotateConstant);
+
+			GalaxyCamera.Render ();
 			SkyboxCamera.Render ();
 			FarCamera.Render ();
 			NearCamera.Render(); 
@@ -163,6 +172,7 @@ namespace GATU
 			NearCamera.targetTexture = null; 
 			FarCamera.targetTexture = null; 
 			SkyboxCamera.targetTexture = null;
+			GalaxyCamera.targetTexture = null;
 
 			RenderTexture.active = backupRenderTexture;
 
@@ -188,6 +198,8 @@ namespace GATU
 				UnityEngine.Object.Destroy(NearCamera);
 				UnityEngine.Object.Destroy(FarCamera);
 				UnityEngine.Object.Destroy(SkyboxCamera);
+				UnityEngine.Object.Destroy(GalaxyCamera);
+
 				return;
 			}
 
@@ -219,6 +231,7 @@ namespace GATU
 				Camera sourceNearCam = null;
 				Camera sourceFarCam = null;
 				Camera sourceSkyCam = null;
+				Camera sourceGalaxyCam = null;
 
 				foreach (Camera cam in Camera.allCameras) {
 					if (cam.name == "Camera 00") {
@@ -238,28 +251,43 @@ namespace GATU
 						break;
 					}
 				}
+				foreach (Camera cam in Camera.allCameras) {
+					if (cam.name == "GalaxyCamera") {
+						sourceGalaxyCam = cam;
+						break;
+					}
+				}
 
-				var NearCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera 00");
+
+				var NearCameraGameObject = new GameObject ("GATU Camera 00");
 				NearCamera = NearCameraGameObject.AddComponent<Camera> ();
 				NearCamera.CopyFrom (sourceNearCam);
 				NearCamera.enabled = false;
 				NearCamera.fieldOfView = fovAngle;
 				NearCamera.aspect = aspect;
 
-				var FarCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera 01");
+				var FarCameraGameObject = new GameObject ("GATU Camera 01");
 				FarCamera = FarCameraGameObject.AddComponent<Camera> ();
 				FarCamera.CopyFrom (sourceFarCam);
 				FarCamera.enabled = false;
 				FarCamera.fieldOfView = fovAngle;
 				FarCamera.aspect = aspect;
 
-				var SkyboxCameraGameObject = new GameObject ("GoAtThrottleUp Cam Camera ScaledSpace");
+				var SkyboxCameraGameObject = new GameObject ("GATU Camera ScaledSpace");
 				SkyboxCamera = SkyboxCameraGameObject.AddComponent<Camera> ();
 				SkyboxCamera.transform.position = sourceSkyCam.transform.position;
 				SkyboxCamera.CopyFrom (sourceSkyCam);
 				SkyboxCamera.enabled = false;
 				SkyboxCamera.fieldOfView = fovAngle;
 				SkyboxCamera.aspect = aspect;
+
+				var GalaxyCameraGameObject = new GameObject ("GATU GalaxyCamera");
+				GalaxyCamera = GalaxyCameraGameObject.AddComponent<Camera> ();
+				GalaxyCamera.transform.position = sourceGalaxyCam.transform.position;
+				GalaxyCamera.CopyFrom (sourceGalaxyCam);
+				GalaxyCamera.enabled = false;
+				GalaxyCamera.fieldOfView = fovAngle;
+				GalaxyCamera.aspect = aspect;
 
 			}
 				

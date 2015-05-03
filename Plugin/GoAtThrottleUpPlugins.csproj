@@ -41,6 +41,7 @@
     <Reference Include="System">
       <HintPath>E:\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\System.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

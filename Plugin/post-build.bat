@@ -38,6 +38,8 @@ del /S ..\ServerRelay\*.pyc
 del .\bin\Release\GATU*.zip
 
 "%ziploc%" a -tzip .\bin\Release\GATU-ServerRelay.zip ..\ServerRelay\*
+"%ziploc%" a -tzip .\bin\Release\GATU-ServerRelay.zip ..\LICENSE
 "%ziploc%" a -tzip .\bin\Release\GATU-KSP-Plugin.zip "%kerbalplug%\..\GoAt*"
+"%ziploc%" a -tzip .\bin\Release\GATU-KSP-Plugin.zip "..\LICENSE
 
 timeout /t 5

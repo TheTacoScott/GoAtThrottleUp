@@ -234,30 +234,11 @@ namespace GATU
 				Camera sourceGalaxyCam = null;
 
 				foreach (Camera cam in Camera.allCameras) {
-					if (cam.name == "Camera 00") {
-						sourceNearCam = cam;
-						break;
-					}
+					if (cam.name == "Camera 00")               { sourceNearCam = cam; }
+					else if (cam.name == "Camera 01")          { sourceFarCam = cam; }
+					else if (cam.name == "Camera ScaledSpace") { sourceSkyCam = cam; }
+					else if (cam.name == "GalaxyCamera")       { sourceGalaxyCam = cam; }
 				}
-				foreach (Camera cam in Camera.allCameras) {
-					if (cam.name == "Camera 01") {
-						sourceFarCam = cam;
-						break;
-					}
-				}
-				foreach (Camera cam in Camera.allCameras) {
-					if (cam.name == "Camera ScaledSpace") {
-						sourceSkyCam = cam;
-						break;
-					}
-				}
-				foreach (Camera cam in Camera.allCameras) {
-					if (cam.name == "GalaxyCamera") {
-						sourceGalaxyCam = cam;
-						break;
-					}
-				}
-
 
 				var NearCameraGameObject = new GameObject ("GATU Camera 00");
 				NearCamera = NearCameraGameObject.AddComponent<Camera> ();

@@ -15,13 +15,12 @@ namespace GATU
 		//Borrowed from MechJeb2 & Telemachus
 		static public Quaternion updateHeadingPitchRollField(Vessel v)
 		{
-			Vector3d CoM, north, up;
+			Vector3d north, up;
 			Quaternion rotationSurface;
+			
+			up = (v.CoM - v.mainBody.position).normalized;
 
-			CoM = v.findWorldCenterOfMass();
-			up = (CoM - v.mainBody.position).normalized;
-
-			north = Vector3d.Exclude(up, (v.mainBody.position + v.mainBody.transform.up * (float)v.mainBody.Radius) - CoM).normalized;
+			north = Vector3d.Exclude(up, (v.mainBody.position + v.mainBody.transform.up * (float)v.mainBody.Radius) - v.CoM).normalized;
 
 			rotationSurface = Quaternion.LookRotation(north, up);
 			return Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(v.GetTransform().rotation) * rotationSurface);

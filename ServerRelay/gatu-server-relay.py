@@ -49,7 +49,7 @@ class gaturoot(object):
     if camid==11: return_data = gatu.globals.camera11.getdata()
     if camid==12: return_data = gatu.globals.camera12.getdata()  
     
-    return json.dumps({"hash":hashlib.md5(return_data).hexdigest(),"image":base64.b64encode(return_data)})
+    return json.dumps({"hash":hashlib.md5(return_data).hexdigest(),"image":base64.b64encode(return_data).decode("utf-8")})
     
   @cherrypy.expose
   def setimage(self, **kwargs):
@@ -85,7 +85,7 @@ class gaturoot(object):
     
     if posttype == "low":
       with gatu.globals.low_data_lock:
-        if (posttime > gatu.globals.low_data_updated):
+        if float(posttime) > float(gatu.globals.low_data_updated):
           gatu.globals.low_data_updated = posttime
           logging.warning("Updating LOW FREQ Values")
           for keyname in kwargs:
@@ -97,7 +97,7 @@ class gaturoot(object):
     
     elif posttype == "med":
       with gatu.globals.med_data_lock:
-        if (posttime > gatu.globals.med_data_updated):
+        if float(posttime) > float(gatu.globals.med_data_updated):
           gatu.globals.med_data_updated = posttime
           logging.warning("Updating MED FREQ Values")
           for keyname in kwargs:
@@ -109,7 +109,7 @@ class gaturoot(object):
               
     elif posttype == "high":
       with gatu.globals.high_data_lock:
-        if (posttime > gatu.globals.high_data_updated):
+        if float(posttime) > float(gatu.globals.high_data_updated):
           gatu.globals.high_data_updated = posttime
           logging.warning("Updating HIGH FREQ Values")
           for keyname in kwargs:
